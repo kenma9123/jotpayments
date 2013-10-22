@@ -43,11 +43,14 @@
     <script type="text/javascript" src="' . HTTP_URL . 'js/lib/backbone.js?v=1"></script>
     <script type="text/javascript" src="' . HTTP_URL . 'js/lib/knockout.js?v=2.3.0"></script>
     <script type="text/javascript" src="' . HTTP_URL . 'js/lib/knockback.js?v=0.17.2"></script>
+    <script type="text/javascript" src="' . HTTP_URL . 'js/lib/moment.js?v=2.3.1"></script>
     '. $jotformFiles .'
     <script type="text/javascript" src="' . HTTP_URL . 'js/lib/charts/dx.chartjs.js"></script>
     <script type="text/javascript" src="' . HTTP_URL . 'js/lib/charts/globalize.js"></script>
+    <script type="text/javascript" src="' . HTTP_URL . 'js/scripts/account-view.js"></script>
     <script type="text/javascript" src="' . HTTP_URL . 'js/scripts/form-model.js"></script>
     <script type="text/javascript" src="' . HTTP_URL . 'js/scripts/form-view.js"></script>
+    <script type="text/javascript" src="' . HTTP_URL . 'js/scripts/property-view.js"></script>
     <script type="text/javascript" src="' . HTTP_URL . 'js/scripts/chart-view.js"></script>
     <script type="text/javascript" src="' . HTTP_URL . 'js/scripts/main-view.js"></script>
     <script type="text/javascript" src="' . HTTP_URL . 'js/maincore.js"></script>

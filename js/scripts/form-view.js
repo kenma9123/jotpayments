@@ -156,7 +156,9 @@ var _jp_FormView = Backbone.View.extend({
 
                     console.log(payments);
 
-                    self.global.chartView.info(payments);
+                    self.global.propertyView.fetch(formID, function(questions){
+                        self.global.chartView.info(payments, questions);
+                    });
                 }
 
                 this.isProcessing = true;

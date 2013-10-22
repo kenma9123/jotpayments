@@ -2,7 +2,7 @@ var _jp_ChartView = Backbone.View.extend({
 
     initialize: function()
     {
-        this.currency = [
+        this.currencyTable = [
             ['USD', '$'], ['AUD', 'Australian Dollar'],
             ['BRL', '$'], ['CAD', 'Canadian Dollar'],
             ['CLP', '$'], ['HRK', 'kn'],
@@ -25,11 +25,11 @@ var _jp_ChartView = Backbone.View.extend({
     formatPrice: function( price, currency )
     {
         var currency_sign = '';
-        for( var x = 0; x < this.currency.length; x++ )
+        for( var x = 0; x < this.currencyTable.length; x++ )
         {
-            if ( this.currency[x].indexOf(currency) > -1)
+            if ( this.currencyTable[x].indexOf(currency) > -1)
             {
-                currency_sign = this.currency[x][1];
+                currency_sign = this.currencyTable[x][1];
                 break;
             }
         }
@@ -57,22 +57,20 @@ var _jp_ChartView = Backbone.View.extend({
         };
 
         //loop through payments
-        for( var x in payments )
-        {
-            var payment = payments[x]
-              , products = payment.product;
+        _.each(payments, function(payment, i){
+            var products = payment.product;
 
             //loop throught bought products under payment
-            for ( var y in products )
-            {
+            _.each(products, function(product, i){
+
                 //get each product information/data
-                var product = products[y]
-                  , product_created = product.created_at
+                var product_created = product.created_at
                   , product_item = product.item
                   , product_data = product.data
                   , product_price = product_data.price;
 
-                var payment_day = new Date(product_created);
+                var date = moment(product_created).tz(self.global.accountView.user.time_zone)._d;
+                var payment_day = new Date(date);
 
                 //check if payment date falls within this week only
                 if (
@@ -82,16 +80,13 @@ var _jp_ChartView = Backbone.View.extend({
                 {
                     if ( typeof payment_on_day[payment_day.getDay()] === 'undefined' )
                     {
-                        payment_on_day[payment_day.getDay()] = {
-                            value: 0,
-                            currency: payment.currency
-                        };
+                        payment_on_day[payment_day.getDay()] = 0;
                     }
 
-                    payment_on_day[payment_day.getDay()].value += product_price;
+                    payment_on_day[payment_day.getDay()] += product_price;
                 }
-            }
-        }
+            });
+        });
 
         console.log("his week payments", payment_on_day);
 
@@ -105,7 +100,7 @@ var _jp_ChartView = Backbone.View.extend({
 
             if ( typeof payment_on_day[z] !== 'undefined' )
             {
-                objectModel.payment = self.formatPrice(payment_on_day[z].value, payment_on_day[z].currency);
+                objectModel.payment = self.formatPrice(payment_on_day[z], self.currency);
             }
 
             dayModels.push(new Backbone.Model(objectModel));
@@ -129,108 +124,137 @@ var _jp_ChartView = Backbone.View.extend({
         var totalPaymentsViewModel = function(payments)
         {
             //loop through payments
-            var total_prices = 0
-              , currency = '';
-            for( var x in payments )
-            {
-                var payment = payments[x]
-                  , payment_total = payment.total.replace(',','');
+            var total_prices = 0;
 
-                total_prices += Number(payment_total);
-                currency = payment.currency;
-            }
+            _.each(payments, function(payment, i){
+                total_prices += Number(payment.total.replace(',',''));
+
+                //make currency as global
+                self.currency = payment.currency;
+            });
 
             this.heading = "Total Payments";
-            this.total_payments = self.formatPrice(total_prices, currency) ;
+            this.total_payments = self.formatPrice(total_prices, self.currency) ;
         };
 
         ko.applyBindings(new totalPaymentsViewModel(payments), $("#total_payments")[0]);
     },
 
-    bestSeller: function(payments)
+    countPaymentProducts: function(payments, next)
     {
+        var products_payment_count = {};
+        _.each(payments, function(payment, i){
+            var products = payment.product;
+
+            _.each(products, function(product, i){
+
+                var product_name = String(product.data.name).replace(/\s/g,'_');
+                if ( typeof products_payment_count[product_name] === 'undefined' )
+                {
+                    products_payment_count[product_name] = 0;
+                }
+
+                products_payment_count[product_name]++;
+            });
+        });
+
+        if (next) next.call(this, products_payment_count);
+    },
+
+    bestSeller: function(payments, productSoldcounts)
+    {
+        var self = this;
         var bestSellerViewModel = function(payments)
         {
-            var products_payment_count = {};
-            for( var x in payments )
-            {
-                var payment = payments[x]
-                  , products = payment.product;
+            var bestSellerPrice = 0
+              , bestSellerName = "";
 
-                for ( var y in products )
+            _.each(productSoldcounts, function(max, key){
+
+                //get the key and loop through the payments to get the total price of the item
+                if ( max === _.max(productSoldcounts) )
                 {
-                    var product_name = String(products[y].data.name).replace(/\s/g,'_');
+                    _.each(payments, function(payment, i){
+                        //loop through products
+                        _.each(payment.product, function(prod, i){
+                            //check for the best seller product and add its price
+                            if ( prod.data.name === key.replace(/_/g, ' ') )
+                            {
+                                bestSellerPrice += prod.data.price;
+                                bestSellerName = prod.data.name;
+                            }
+                        });
+                    });
 
-                    if ( typeof products_payment_count[product_name] === 'undefined' )
-                    {
-                        products_payment_count[product_name] = 0;
-                    }
-
-                    products_payment_count[product_name]++;
+                    return;
                 }
-            }
+            });
 
-            this.bestSeller = _.max(products_payment_count);
-            this.price = 123123;
+            this.price = "with a total of " + self.formatPrice(bestSellerPrice, self.currency);
+            this.best = bestSellerName;
             this.heading = "Best Seller";
-            console.log('best seller', this.bestSeller);
         };
 
         ko.applyBindings(new bestSellerViewModel(payments), $("#best_seller")[0]);
     },
 
-    info: function(payments)
+    productList: function(payments, questions, productSoldcounts)
     {
-        this.paymentThisWeek(payments);
-        this.totalPayments(payments);
-        this.bestSeller(payments);
+        console.log(payments, questions);
+        var self = this;
+        var Product = function(data)
+        {
+            this.name = ko.observable(data.name);
+            this.price = ko.observable(data.price);
+            this.soldCount = ko.observable(data.soldCount);
+            this.soldTotal = ko.observable(data.soldTotal);
+        };
+
+        var productListViewModel = function(payments, questions)
+        {
+            var $this = this;
+            this.heading = "Product List";
+            this.products = ko.observableArray([]);
+
+            this.products.push(new Product({name:"Name",price:'Price', soldCount:"Count", soldTotal:"Total"}));
+
+            //get the products
+            _.each(questions.products, function(product, i){
+
+                var product_name = String(product.name).replace(/\s/g,'_')
+                  , soldTotal = 0
+                  , soldCount = 0;
+
+                if ( typeof productSoldcounts[product_name] !== 'undefined' )
+                {
+                    soldCount = productSoldcounts[product_name];
+                    soldTotal = (product.price * soldCount);
+                }
+
+                var model = {
+                    name: product.name,
+                    price: self.formatPrice(product.price, self.currency),
+                    soldCount: soldCount,
+                    soldTotal: self.formatPrice(soldTotal, self.currency)
+                };
+
+                $this.products.push( new Product(model) );
+            });
+        };
+
+        ko.applyBindings(new productListViewModel(payments, questions), $("#product_list")[0]);
     },
 
-    line: function(form)
+    info: function(payments, questions)
     {
-        var dataSource = [
-            { year: 1950, europe: 546},
-            { year: 1960, europe: 605},
-            { year: 1970, europe: 656},
-            { year: 1980, europe: 694},
-            { year: 1990, europe: 721},
-            { year: 2000, europe: 730},
-            { year: 2010, europe: 728},
-            { year: 2020, europe: 721},
-            { year: 2030, europe: 704},
-            { year: 2040, europe: 680},
-            { year: 2050, europe: 650}
-        ];
+        this.totalPayments(payments);
+        this.paymentThisWeek(payments);
 
-        $(".line-chart").dxChart({
-            dataSource: dataSource,
-            commonSeriesSettings: {
-                argumentField: "year"
-            },
-            series: [
-                { valueField: "europe", name: "Europe" }
-            ],
-            argumentAxis:{
-                grid:{
-                    visible: true
-                }
-            },
-            tooltip:{
-                enabled: true
-            },
-            title: "Historic, Current and Future Population",
-            legend: {
-                visible: false,
-                verticalAlignment: "top",
-                horizontalAlignment: "center"
-            },
-            commonPaneSettings: {
-                border:{
-                    visible: true,
-                    right: false
-                }       
-            }
-        });        
+        //lets count the product solds
+        this.countPaymentProducts(payments, function(productSoldcounts){
+            this.bestSeller(payments, productSoldcounts);
+            this.productList(payments, questions, productSoldcounts);
+        });
     },
 
     pie: function(payment)

@@ -48,7 +48,7 @@
     <div class="jotpayment-outer-div">
         <div class="jotpayment-head">
             <div class="pure-menu pure-menu-open pure-menu-horizontal">
-                <a href="#" class="pure-menu-heading"><h1>JotPayments</h1></a>
+                <a href="#" class="pure-menu-heading"><h1><strong>Jot</strong>Payments</h1></a>
                 <ul>
                     <li class="pure-menu-selected"><a href="#">Home</a></li>
                     <li><a href="#">Contact</a></li>
@@ -68,72 +68,40 @@
                     </div>
                 </div>
 
-                <div class="middle-cell jotpayment-content">
-                    <div class="info-chart charts">
-                        <div id="total_payments" data-bind="visible: (typeof total_payments != 'undefined')">
-                            <h1 class="heading" data-bind="text: heading"></h1>
-                            <h3 class="sub-heading" data-bind="text: total_payments"></h3>
-                        </div>
-                        <div id="this_week_payments" data-bind="visible: days().length > 0" style="margin-top: 50px;">
+                <div class="middle-cell jotpayment-content total_payments">
+                    <div id="total_payments">
+                        <h1 class="heading" data-bind="text: heading"></h1>
+                        <h3 class="sub-heading" data-bind="text: total_payments"></h3>
+                    </div>
+                    <div class="info-chart charts week_payments">
+                        <div id="this_week_payments" data-bind="visible: days().length > 0">
                             <h1 class="heading" data-bind="text: heading"></h1>
                             <ul data-bind="foreach: days" class="segoeUI-font">
                                 <li class="list">
                                     <label class="labels" data-bind="text: day"></label>
                                     <span class="labels payments" data-bind="text: payment"></span>
+                                    <div class="clearer"></div>
                                 </li>
                             </ul>
                         </div>
                     </div>
-                    <div class="info-chart charts">
+                    <div class="info-chart charts best_seller">
                         <div id="best_seller">
                             <h1 class="heading" data-bind="text: heading"></h1>
-                            <h3 class="sub-heading" data-bind="text: bestSeller"></h3>
+                            <h3 class="sub-heading" data-bind="text: best"></h3>
                             <span class="mini-heading" data-bind="text: price"></span>
                         </div>
-                        <div style="margin-top: 30px;"> 
-                            <h1 class="heading">Product List</h1>
-                            <ul data-bind="foreach: days" class="segoeUI-font products">
+                    </div>
+                    <div class="info-chart charts product_list">
+                        <div id="product_list"> 
+                            <h1 class="heading" data-bind="text: heading"></h1>
+                            <ul data-bind="foreach: products" class="segoeUI-font products">
                                 <li class="list">
-                                    <label class="labels name">Name</label>
-                                    <label class="labels price">Price</label>
-                                    <label class="labels sold">Sold</label>
+                                    <label class="labels name" data-bind="text: name"></label>
+                                    <label class="labels price" data-bind="text: price"></label>
+                                    <label class="labels soldCount" data-bind="text: soldCount"></label>
+                                    <label class="labels soldTotal" data-bind="text: soldTotal"></label>
                                 </li>
-                                <li class="list">
-                                    <label class="labels name">Name</label>
-                                    <label class="labels price">Price</label>
-                                    <label class="labels sold">Sold</label>
-                                </li>
-                                <li class="list">
-                                    <label class="labels name">Name</label>
-                                    <label class="labels price">Price</label>
-                                    <label class="labels sold">Sold</label>
-                                </li>
-                                <li class="list">
-                                    <label class="labels name">Name</label>
-                                    <label class="labels price">Price</label>
-                                    <label class="labels sold">Sold</label>
-                                </li>
-                                <li class="list">
-                                    <label class="labels name">Name</label>
-                                    <label class="labels price">Price</label>
-                                    <label class="labels sold">Sold</label>
-                                </li>
-                                <li class="list">
-                                    <label class="labels name">Name</label>
-                                    <label class="labels price">Price</label>
-                                    <label class="labels sold">Sold</label>
-                                </li>
-                                <li class="list">
-                                    <label class="labels name">Name</label>
-                                    <label class="labels price">Price</label>
-                                    <label class="labels sold">Sold</label>
-                                </li>
-                                <li class="list">
-                                    <label class="labels name">Name</label>
-                                    <label class="labels price">Price</label>
-                                    <label class="labels sold">Sold</label>
-                                </li>
-
                             </ul>
                         </div>
                     </div>

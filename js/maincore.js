@@ -16,9 +16,11 @@ $(window).load(function(){
 
 
         //objects
+        __jotPayments_core.accountView = new _jp_AccountView();
         __jotPayments_core.mainView = new _jp_MainView();
         __jotPayments_core.formView = new _jp_FormView();
         __jotPayments_core.chartView = new _jp_ChartView();
+        __jotPayments_core.propertyView = new _jp_PropertyView();
 
         //main executor
         var _jp_ = function()
@@ -87,7 +89,7 @@ $(window).load(function(){
 
                 this.handleMenuHeight(function(){
                     this.initJF(function(){
-                        self.require(['main-view']);
+                        self.require(['accountView', 'main-view']);
                     });
                 });
             };
