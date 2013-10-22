@@ -24,35 +24,7 @@ var _jp_FormView = Backbone.View.extend({
         ];
     },
 
-    /**
-     * Fetch forms from the server,
-     * and return it back as a backbone collection
-     */
     fetchForms: function(next)
-    {
-        this.getJF_Forms(function(forms){
-            console.log('Got forms', forms);
-            
-            //create model for each forms
-            var formsModel = [];
-            for( var x = 0; x < forms.length; x++ )
-            {
-                var model = new Backbone.Model({
-                    id: forms[x].id,
-                    name: forms[x].title,
-                    url: forms[x].url
-                });
-
-                //push to model array
-                formsModel.push(model);
-            }
-
-            var forms_collection = new Backbone.Collection(formsModel);
-            if (next) next(forms_collection);
-        }); 
-    },
-
-    getJF_Forms: function(next)
     {
         var self = this;
         var query = {
@@ -75,7 +47,7 @@ var _jp_FormView = Backbone.View.extend({
             }
         }, function error(){
             console.error("Something went wrong when fetching rest of your Forms, retying..");
-            self.getJF_Forms(next);
+            self.fetchForms(next);
         });
     },
 
@@ -86,7 +58,7 @@ var _jp_FormView = Backbone.View.extend({
 
         if ( !this.isProcessing )
         {
-            var formID = form.id();
+            var formID = form.id;
             var product_data = [];
 
             JF.getFormSubmissions(formID, function(submissions){
@@ -156,8 +128,8 @@ var _jp_FormView = Backbone.View.extend({
 
                     console.log(payments);
 
-                    self.global.propertyView.fetch(formID, function(questions){
-                        self.global.chartView.info(payments, questions);
+                    window.app.propertyView.fetch(formID, function(questions){
+                        window.app.chartView.info(payments, questions);
                     });
                 }
 

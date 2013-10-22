@@ -55,9 +55,15 @@
                 </ul>
             </div>
         </div>
+        <div class="form-search" id="form_search" data-bind="event: { mouseover: showClose, mouseout: hideClose }">
+            <input class="type-ahead" type="text" data-bind="attr:{placeholder:placeholderVal}"/>
+            <div class="close dn" data-bind="css: { dn: show_close() == false }, click: clear">&#10006;</div>
+            <div class="form-picker-btn">or <button class="pure-button pure-blue picker-btn">Form Picker</button></div>
+        </div>
+
         <div class="table jotpayment-main-cont">
             <div class="table-row">
-                <div class="left-cell jotpayment-menu">
+<!--                 <div class="left-cell jotpayment-menu">
                     <div class="pure-menu pure-menu-open">
                         <a class="pure-menu-heading user-forms-title">Your Forms</a>
                         <ul id="user-forms" data-bind="foreach: forms">
@@ -66,15 +72,15 @@
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="middle-cell jotpayment-content total_payments">
-                    <div id="total_payments">
+                    <div id="total_payments" data-bind="visible: hasValue() == true">
                         <h1 class="heading" data-bind="text: heading"></h1>
                         <h3 class="sub-heading" data-bind="text: total_payments"></h3>
                     </div>
                     <div class="info-chart charts week_payments">
-                        <div id="this_week_payments" data-bind="visible: days().length > 0">
+                        <div id="this_week_payments" data-bind="visible: hasValue() == true">
                             <h1 class="heading" data-bind="text: heading"></h1>
                             <ul data-bind="foreach: days" class="segoeUI-font">
                                 <li class="list">
@@ -86,14 +92,14 @@
                         </div>
                     </div>
                     <div class="info-chart charts best_seller">
-                        <div id="best_seller">
+                        <div id="best_seller" data-bind="visible: hasValue() == true">
                             <h1 class="heading" data-bind="text: heading"></h1>
                             <h3 class="sub-heading" data-bind="text: best"></h3>
                             <span class="mini-heading" data-bind="text: price"></span>
                         </div>
                     </div>
                     <div class="info-chart charts product_list">
-                        <div id="product_list"> 
+                        <div id="product_list" data-bind="visible: hasValue() == true"> 
                             <h1 class="heading" data-bind="text: heading"></h1>
                             <ul data-bind="foreach: products" class="segoeUI-font products">
                                 <li class="list">

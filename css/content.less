@@ -1,6 +1,50 @@
 body {
     background: #F3F3F3;
 }
+.form-search {
+
+    input {
+        font-size: 25px;
+        width: 100%;
+        padding: 10px 40px;
+        border: 1px solid #DBDBDB;
+        outline: 0;
+    }
+
+    .search-results {
+        margin: 0px;
+        padding: 10px 30px;
+        border: 1px solid #1A9E6B;
+        border-top: none;
+        color: #fff;
+        background: rgba(96, 215, 169, 0.6);
+
+        &:hover {
+            background: #60D7A9;
+        }
+    }
+
+    .tt-suggestion:first-child p
+    {
+        border-top: 1px solid #1A9E6B;
+    }
+
+    .close {
+        position: absolute;
+        margin-top: -34px;
+        margin-left: 5px;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .form-picker-btn {
+        position: absolute;
+        margin-top: -44px;
+        right: 30px;
+    }
+}
 .jotpayment-main-cont {
     width: 100%;
 
@@ -30,9 +74,9 @@ body {
 }
 
 .jotpayment-content {
-	border-top: 1px solid #b7b7b7;
-    border-left: none;
-    background-color: #eee;
+	// border-top: 1px solid #b7b7b7;
+    // border-left: none;
+    // background-color: #eee;
 
     #total_payments {
         text-align: center;

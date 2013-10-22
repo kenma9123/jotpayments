@@ -9,18 +9,61 @@ $(window).load(function(){
         // Extend Backbone with events so we can use custom events
         _.extend(Backbone, Backbone.Events);
 
-        var __jotPayments_core = {};
-        Backbone.View.prototype.global = __jotPayments_core;
-        Backbone.Model.prototype.global = __jotPayments_core;
-        Backbone.Router.prototype.global = __jotPayments_core;
-
-
         //objects
-        __jotPayments_core.accountView = new _jp_AccountView();
-        __jotPayments_core.mainView = new _jp_MainView();
-        __jotPayments_core.formView = new _jp_FormView();
-        __jotPayments_core.chartView = new _jp_ChartView();
-        __jotPayments_core.propertyView = new _jp_PropertyView();
+        window.app = {};
+        window.app.accountView = new _jp_AccountView();
+        window.app.mainView = new _jp_MainView();
+        window.app.formView = new _jp_FormView();
+        window.app.chartView = new _jp_ChartView();
+        window.app.propertyView = new _jp_PropertyView();
+
+        //bindings
+        window.app.bindings = {};
+
+        //total Payments viewmodel
+        var totalPaymentsViewModel = function()
+        {
+            this.heading = "Total Payments";
+            this.total_payments = ko.observable();
+            this.hasValue = ko.observable(false);
+        };
+
+        //payment week viewmodel
+        var dayWeekViewModel = function()
+        {
+            this.heading = "Payments this week";
+            this.days = ko.observableArray([]);
+            this.hasValue = ko.observable(false);
+        };
+
+        //best seller view model
+        var bestSellerViewModel = function()
+        {
+            this.price = ko.observable();
+            this.best = ko.observable();
+            this.heading = "Best Seller";
+            this.hasValue = ko.observable(false);
+        };
+
+        //product list view model
+        var productListViewModel = function()
+        {
+            this.heading = "Product List";
+            this.products = ko.observableArray([]);
+            this.hasValue = ko.observable(false);
+        };
+
+        //register bindings
+        window.app.bindings.totalPaymentsViewModel = new totalPaymentsViewModel();
+        window.app.bindings.dayWeekViewModel = new dayWeekViewModel();
+        window.app.bindings.bestSellerViewModel = new bestSellerViewModel();
+        window.app.bindings.productListViewModel = new productListViewModel();
+
+        //apply bindings
+        ko.applyBindings(window.app.bindings.totalPaymentsViewModel, $("#total_payments")[0]);
+        ko.applyBindings(window.app.bindings.dayWeekViewModel, $('#this_week_payments')[0]);
+        ko.applyBindings(window.app.bindings.bestSellerViewModel, $("#best_seller")[0]);
+        ko.applyBindings(window.app.bindings.productListViewModel, $("#product_list")[0]);
 
         //main executor
         var _jp_ = function()
@@ -31,6 +74,8 @@ $(window).load(function(){
                     'height': window.innerHeight - $(".jotpayment-head").outerHeight() - $(".user-forms-title").outerHeight() - 40,
                     'overflow': 'scroll'
                 });
+
+                $(".form-search .type-ahead").width( window.innerWidth);
 
                 $(".charts").height($(".jotpayment-menu").height() / 2);
 

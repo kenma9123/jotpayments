@@ -37,6 +37,48 @@ var _jp_ChartView = Backbone.View.extend({
         return currency_sign + number_format(price) + ' ' + currency;
     },
 
+    countPaymentProducts: function(payments, next)
+    {
+        var products_payment_count = {};
+        _.each(payments, function(payment, i){
+            var products = payment.product;
+
+            _.each(products, function(product, i){
+
+                var product_name = String(product.data.name).replace(/\s/g,'_');
+                if ( typeof products_payment_count[product_name] === 'undefined' )
+                {
+                    products_payment_count[product_name] = 0;
+                }
+
+                products_payment_count[product_name]++;
+            });
+        });
+
+        if (next) next.call(this, products_payment_count);
+    },
+
+    totalPayments: function(payments)
+    {
+        var self = this;
+
+        if ( payments )
+        {
+            //loop through payments
+            var total_prices = 0;
+
+            _.each(payments, function(payment, i){
+                total_prices += Number(payment.total.replace(',',''));
+
+                //make currency as global
+                self.currency = payment.currency;
+            });
+
+            window.app.bindings.totalPaymentsViewModel.total_payments(self.formatPrice(total_prices, self.currency));
+            window.app.bindings.totalPaymentsViewModel.hasValue( ( payments.length > 0 ) );
+        }
+    },
+
     paymentThisWeek: function(payments)
     {
         var self = this
@@ -69,7 +111,7 @@ var _jp_ChartView = Backbone.View.extend({
                   , product_data = product.data
                   , product_price = product_data.price;
 
-                var date = moment(product_created).tz(self.global.accountView.user.time_zone)._d;
+                var date = moment(product_created).tz(window.app.accountView.user.time_zone)._d;
                 var payment_day = new Date(date);
 
                 //check if payment date falls within this week only
@@ -90,7 +132,12 @@ var _jp_ChartView = Backbone.View.extend({
 
         console.log("his week payments", payment_on_day);
 
-        var dayModels = [];
+        var dayModels = []
+          , dayModel = function(data) {
+                this.day = ko.observable(data.day);
+                this.payment = ko.observable(data.payment);
+            };
+
         for( var z = 0; z < days_week.length; z++ )
         {
             var objectModel = {
@@ -103,105 +150,50 @@ var _jp_ChartView = Backbone.View.extend({
                 objectModel.payment = self.formatPrice(payment_on_day[z], self.currency);
             }
 
-            dayModels.push(new Backbone.Model(objectModel));
+            dayModels.push(new dayModel(objectModel));
         }
 
-        var days_collection = new Backbone.Collection(dayModels);
-
-        var dayWeekViewModel = function(days_collection)
-        {
-            this.heading = "Payment this week";
-            //attach collection observable
-            this.days = kb.collectionObservable(days_collection, { view_model: kb.ViewModel });
-        };
-
-        ko.applyBindings(new dayWeekViewModel(days_collection), $('#this_week_payments')[0]);
-    },
-
-    totalPayments: function(payments)
-    {
-        var self = this;
-        var totalPaymentsViewModel = function(payments)
-        {
-            //loop through payments
-            var total_prices = 0;
-
-            _.each(payments, function(payment, i){
-                total_prices += Number(payment.total.replace(',',''));
-
-                //make currency as global
-                self.currency = payment.currency;
-            });
-
-            this.heading = "Total Payments";
-            this.total_payments = self.formatPrice(total_prices, self.currency) ;
-        };
-
-        ko.applyBindings(new totalPaymentsViewModel(payments), $("#total_payments")[0]);
-    },
-
-    countPaymentProducts: function(payments, next)
-    {
-        var products_payment_count = {};
-        _.each(payments, function(payment, i){
-            var products = payment.product;
-
-            _.each(products, function(product, i){
-
-                var product_name = String(product.data.name).replace(/\s/g,'_');
-                if ( typeof products_payment_count[product_name] === 'undefined' )
-                {
-                    products_payment_count[product_name] = 0;
-                }
-
-                products_payment_count[product_name]++;
-            });
-        });
-
-        if (next) next.call(this, products_payment_count);
+        window.app.bindings.dayWeekViewModel.days(dayModels);
+        window.app.bindings.dayWeekViewModel.hasValue( ( payments.length > 0 ) )
     },
 
     bestSeller: function(payments, productSoldcounts)
     {
         var self = this;
-        var bestSellerViewModel = function(payments)
-        {
-            var bestSellerPrice = 0
-              , bestSellerName = "";
+        var bestSellerPrice = 0
+          , bestSellerName = "";
 
-            _.each(productSoldcounts, function(max, key){
+        _.each(productSoldcounts, function(max, key){
 
-                //get the key and loop through the payments to get the total price of the item
-                if ( max === _.max(productSoldcounts) )
-                {
-                    _.each(payments, function(payment, i){
-                        //loop through products
-                        _.each(payment.product, function(prod, i){
-                            //check for the best seller product and add its price
-                            if ( prod.data.name === key.replace(/_/g, ' ') )
-                            {
-                                bestSellerPrice += prod.data.price;
-                                bestSellerName = prod.data.name;
-                            }
-                        });
+            //get the key and loop through the payments to get the total price of the item
+            if ( max === _.max(productSoldcounts) )
+            {
+                _.each(payments, function(payment, i){
+                    //loop through products
+                    _.each(payment.product, function(prod, i){
+                        //check for the best seller product and add its price
+                        if ( prod.data.name === key.replace(/_/g, ' ') )
+                        {
+                            bestSellerPrice += prod.data.price;
+                            bestSellerName = prod.data.name;
+                        }
                     });
+                });
 
-                    return;
-                }
-            });
+                return;
+            }
+        });
 
-            this.price = "with a total of " + self.formatPrice(bestSellerPrice, self.currency);
-            this.best = bestSellerName;
-            this.heading = "Best Seller";
-        };
-
-        ko.applyBindings(new bestSellerViewModel(payments), $("#best_seller")[0]);
+        window.app.bindings.bestSellerViewModel.price( "with a total of " + self.formatPrice(bestSellerPrice, self.currency) );
+        window.app.bindings.bestSellerViewModel.best(bestSellerName);
+        window.app.bindings.bestSellerViewModel.hasValue( ( payments.length > 0 ) );
     },
 
     productList: function(payments, questions, productSoldcounts)
     {
         console.log(payments, questions);
         var self = this;
+
         var Product = function(data)
         {
             this.name = ko.observable(data.name);
@@ -210,39 +202,34 @@ var _jp_ChartView = Backbone.View.extend({
             this.soldTotal = ko.observable(data.soldTotal);
         };
 
-        var productListViewModel = function(payments, questions)
-        {
-            var $this = this;
-            this.heading = "Product List";
-            this.products = ko.observableArray([]);
+        //push headers for list
+        window.app.bindings.productListViewModel.products.removeAll();
+        window.app.bindings.productListViewModel.products.push(new Product({name:"Name", price:'Price', soldCount:"Count", soldTotal:"Total"}));
 
-            this.products.push(new Product({name:"Name",price:'Price', soldCount:"Count", soldTotal:"Total"}));
+        //get the products
+        _.each(questions.products, function(product, i){
 
-            //get the products
-            _.each(questions.products, function(product, i){
+            var product_name = String(product.name).replace(/\s/g,'_')
+              , soldTotal = 0
+              , soldCount = 0;
 
-                var product_name = String(product.name).replace(/\s/g,'_')
-                  , soldTotal = 0
-                  , soldCount = 0;
+            if ( typeof productSoldcounts[product_name] !== 'undefined' )
+            {
+                soldCount = productSoldcounts[product_name];
+                soldTotal = (product.price * soldCount);
+            }
 
-                if ( typeof productSoldcounts[product_name] !== 'undefined' )
-                {
-                    soldCount = productSoldcounts[product_name];
-                    soldTotal = (product.price * soldCount);
-                }
+            var model = {
+                name: product.name,
+                price: self.formatPrice(product.price, self.currency),
+                soldCount: soldCount,
+                soldTotal: self.formatPrice(soldTotal, self.currency)
+            };
 
-                var model = {
-                    name: product.name,
-                    price: self.formatPrice(product.price, self.currency),
-                    soldCount: soldCount,
-                    soldTotal: self.formatPrice(soldTotal, self.currency)
-                };
+            window.app.bindings.productListViewModel.products.push( new Product(model) );
+        });
 
-                $this.products.push( new Product(model) );
-            });
-        };
-
-        ko.applyBindings(new productListViewModel(payments, questions), $("#product_list")[0]);
+        window.app.bindings.productListViewModel.hasValue( ( payments.length > 0 ) );
     },
 
     info: function(payments, questions)
