@@ -241,6 +241,11 @@ var _jp_ChartView = Backbone.View.extend({
         this.countPaymentProducts(payments, function(productSoldcounts){
             this.bestSeller(payments, productSoldcounts);
             this.productList(payments, questions, productSoldcounts);
+
+            //hide contentmsg
+            if ( payments.length > 0 ) {
+                window.app.bindings.contentMsg.hide();
+            }
         });
     },
 

@@ -70,14 +70,14 @@ $(window).load(function(){
         {
             this.handleMenuHeight = function(next)
             {
-                $("#user-forms").css({
-                    'height': window.innerHeight - $(".jotpayment-head").outerHeight() - $(".user-forms-title").outerHeight() - 40,
-                    'overflow': 'scroll'
-                });
+                // $("#user-forms").css({
+                //     'height': window.innerHeight - $(".jotpayment-head").outerHeight() - $(".user-forms-title").outerHeight() - 40,
+                //     'overflow': 'scroll'
+                // });
 
-                $(".form-search .type-ahead").width( window.innerWidth);
+                $(".form-search .type-ahead").width( window.innerWidth );
 
-                $(".charts").height($(".jotpayment-menu").height() / 2);
+                // $(".charts").height($(".jotpayment-menu").height() / 2);
 
                 if (next) next.call(this);
             };
@@ -134,7 +134,9 @@ $(window).load(function(){
 
                 this.handleMenuHeight(function(){
                     this.initJF(function(){
-                        self.require(['accountView', 'main-view']);
+                        window.app.accountView.handleJFUser(function(){
+                            self.require(['main-view']);
+                        });
                     });
                 });
             };

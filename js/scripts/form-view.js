@@ -8,6 +8,8 @@ var _jp_FormView = Backbone.View.extend({
 
         });
 
+        self.cache = {};
+
         this.supported_payment_types = [
             'control_dwolla',
             'control_paymill',
@@ -38,6 +40,7 @@ var _jp_FormView = Backbone.View.extend({
         JF.getForms(query, function(resp) {
             if ( resp.length > 0 )
             {
+                self.cache.forms = resp;
                 if (next) next(resp);
             }
             else

@@ -44,7 +44,12 @@
             </footer>
         </div>
     </div>
-
+<div id="loader" style="position:fixed; height:100%; width:100%; background:black; top:0; left:0; z-index:99; background:rgba(0,0,0,0.95)">
+    <div style="position:absolute; width: 500px; /* height: 200px; */ top: 50%; right:0; left:0; margin:auto;text-align: center;">
+        
+        <p id="loaderMsg" style="float: left; color: white;  font-size: 18px; display: block; margin: 0;">Processing your data ...</p>
+    </div>
+</div>
     <div class="jotpayment-outer-div">
         <div class="jotpayment-head">
             <div class="pure-menu pure-menu-open pure-menu-horizontal">
@@ -56,13 +61,17 @@
             </div>
         </div>
         <div class="form-search" id="form_search" data-bind="event: { mouseover: showClose, mouseout: hideClose }">
-            <input class="type-ahead" type="text" data-bind="attr:{placeholder:placeholderVal}"/>
-            <div class="close dn" data-bind="css: { dn: show_close() == false }, click: clear">&#10006;</div>
-            <div class="form-picker-btn">or <button class="pure-button pure-blue picker-btn">Form Picker</button></div>
+            <button class="pure-button pure-blue picker-btn ladda-button" data-bind="click: pickform">Pick your Form here</button>
+            <!-- <div class="form-picker-btn">or </div> -->
+            <!-- <input class="type-ahead" type="text" data-bind="attr:{placeholder:placeholderVal}"/> -->
+            <!-- <div class="close dn" data-bind="css: { dn: show_close() == false }, click: clear">&#10006;</div> -->
         </div>
 
-        <div class="table jotpayment-main-cont">
-            <div class="table-row">
+        <div class="jotpayment-main-cont">
+            <div class="notif-history-content" data-bind="visible: show_msg() == true">
+                <h1 class="heading" data-bind="text: msg">No Payment history to display</h1>
+            </div>
+            <div>
 <!--                 <div class="left-cell jotpayment-menu">
                     <div class="pure-menu pure-menu-open">
                         <a class="pure-menu-heading user-forms-title">Your Forms</a>
@@ -74,7 +83,7 @@
                     </div>
                 </div> -->
 
-                <div class="middle-cell jotpayment-content total_payments">
+                <div class="jotpayment-content total_payments">
                     <div id="total_payments" data-bind="visible: hasValue() == true">
                         <h1 class="heading" data-bind="text: heading"></h1>
                         <h3 class="sub-heading" data-bind="text: total_payments"></h3>
@@ -112,11 +121,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="right-cell jotpayment-side">
-
-                </div>
-
             </div>
         </div>
     </div>

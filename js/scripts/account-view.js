@@ -8,10 +8,10 @@ var _jp_AccountView = Backbone.View.extend({
         var self = this;
 
         self.user = {};
+        self.retry = 0;
 
         Backbone.on('call-accountView', function(){
             //console.log("Account View call");
-            self.handleJFUser();
         });
     },
 
@@ -52,18 +52,23 @@ var _jp_AccountView = Backbone.View.extend({
             delete user['senderEmails'];
 
             //check if active 
-            if ( String(user.status).toLowerCase() === 'active' )
-            {
+            if ( String(user.status).toLowerCase() === 'active' ) {
                 self.user = user;
-            }
-            else
-            {
+            } else {
                 alert("User is not ACTIVE anymore\nPlease contact JotForm!");
             }
+
+            if (next) next();
         }, function(e){
             console.error("Something went wrong when fetching User data with message:", e);
             if (window.console && window.console.log) console.log("retrying...");
-            self.handleJFUser(next);
+
+            if ( self.retry < 5 ) {
+                self.retry++;
+                self.handleJFUser(next);
+            } else {
+                alert("Can't contact JotForm, please try again later.");
+            }
         });
     }
 });
