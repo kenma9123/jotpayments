@@ -16,7 +16,7 @@ var totalPaymentsViewModel = function()
 //payment week viewmodel
 var dayWeekViewModel = function()
 {
-    this.heading = "Payments this week";
+    this.heading = '<i class="fa fa-money icons"></i>This week';
     this.days = ko.observableArray([]);
     this.hasValue = ko.observable(false);
 
@@ -32,7 +32,7 @@ var bestSellerViewModel = function()
 {
     this.name = ko.observable();
     this.info = ko.observable();
-    this.heading = "Best Seller";
+    this.heading = '<i class="fa fa-star icons"></i>Best Seller';
     this.hasValue = ko.observable(false);
 
     this.set = function(count, name, formated, hasValue)
@@ -56,7 +56,7 @@ var Product = function(data)
 };
 var productListViewModel = function()
 {
-    this.heading = "Product List";
+    this.heading = '<i class="fa fa-list-alt icons"></i>Product List';
     this.products = ko.observableArray([]);
     this.hasValue = ko.observable(false);
 
