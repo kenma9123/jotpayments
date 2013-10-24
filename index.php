@@ -44,12 +44,14 @@
             </footer>
         </div>
     </div>
-<div id="loader" style="position:fixed; height:100%; width:100%; background:black; top:0; left:0; z-index:99; background:rgba(0,0,0,0.95)">
-    <div style="position:absolute; width: 500px; /* height: 200px; */ top: 50%; right:0; left:0; margin:auto;text-align: center;">
-        
-        <p id="loaderMsg" style="float: left; color: white;  font-size: 18px; display: block; margin: 0;">Processing your data ...</p>
+    <div id="loader" data-bind="visible: show() == true">
+        <div class="loader_inner">
+            <div id="loader_str">
+                <img src="css/images/loading.gif" alt="Loading"/>
+                Verifying user data...
+            </div>
+        </div>
     </div>
-</div>
     <div class="jotpayment-outer-div">
         <div class="jotpayment-head">
             <div class="pure-menu pure-menu-open pure-menu-horizontal">
@@ -88,23 +90,23 @@
                         <h1 class="heading" data-bind="text: heading"></h1>
                         <h3 class="sub-heading" data-bind="text: total_payments"></h3>
                     </div>
+                    <div class="info-chart charts best_seller segoeUI-font">
+                        <div id="best_seller" data-bind="visible: hasValue() == true">
+                            <h1 class="heading" data-bind="text: heading"></h1>
+                            <h3 class="sub-heading" data-bind="text: name"></h3>
+                            <span class="mini-heading" data-bind="html: info"></span>
+                        </div>
+                    </div>
                     <div class="info-chart charts week_payments">
                         <div id="this_week_payments" data-bind="visible: hasValue() == true">
                             <h1 class="heading" data-bind="text: heading"></h1>
                             <ul data-bind="foreach: days" class="segoeUI-font">
                                 <li class="list">
-                                    <label class="labels" data-bind="text: day"></label>
-                                    <span class="labels payments" data-bind="text: payment"></span>
+                                    <label class="labels" data-bind="html: day"></label>
+                                    <span class="labels payments" data-bind="html: payment, css: { 'topline': ($parent.days().length - 1) == $index()}"></span>
                                     <div class="clearer"></div>
                                 </li>
                             </ul>
-                        </div>
-                    </div>
-                    <div class="info-chart charts best_seller">
-                        <div id="best_seller" data-bind="visible: hasValue() == true">
-                            <h1 class="heading" data-bind="text: heading"></h1>
-                            <h3 class="sub-heading" data-bind="text: best"></h3>
-                            <span class="mini-heading" data-bind="text: price"></span>
                         </div>
                     </div>
                     <div class="info-chart charts product_list">
@@ -112,10 +114,11 @@
                             <h1 class="heading" data-bind="text: heading"></h1>
                             <ul data-bind="foreach: products" class="segoeUI-font products">
                                 <li class="list">
-                                    <label class="labels name" data-bind="text: name"></label>
-                                    <label class="labels price" data-bind="text: price"></label>
-                                    <label class="labels soldCount" data-bind="text: soldCount"></label>
-                                    <label class="labels soldTotal" data-bind="text: soldTotal"></label>
+                                    <label class="labels name" data-bind="html: name"></label>
+                                    <label class="labels price" data-bind="html: price"></label>
+                                    <label class="labels soldCount" data-bind="html: soldCount, css: { 'topline': ($parent.products().length - 1) == $index()}"></label>
+                                    <label class="labels soldTotal" data-bind="html: soldTotal, css: { 'topline': ($parent.products().length - 1) == $index()}"></label>
+                                    <label class="clearer"></label>
                                 </li>
                             </ul>
                         </div>

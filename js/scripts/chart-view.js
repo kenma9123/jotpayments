@@ -136,7 +136,8 @@ var _jp_ChartView = Backbone.View.extend({
           , dayModel = function(data) {
                 this.day = ko.observable(data.day);
                 this.payment = ko.observable(data.payment);
-            };
+            }
+          , totalPayment = 0;
 
         for( var z = 0; z < days_week.length; z++ )
         {
@@ -147,26 +148,33 @@ var _jp_ChartView = Backbone.View.extend({
 
             if ( typeof payment_on_day[z] !== 'undefined' )
             {
+                totalPayment += payment_on_day[z];
                 objectModel.payment = self.formatPrice(payment_on_day[z], self.currency);
             }
 
             dayModels.push(new dayModel(objectModel));
         }
 
-        window.app.bindings.dayWeekViewModel.days(dayModels);
-        window.app.bindings.dayWeekViewModel.hasValue( ( payments.length > 0 ) )
+        //push lastlist
+        dayModels.push(new dayModel({
+            day: "&nbsp;",
+            payment: self.formatPrice(totalPayment, self.currency)
+        }));
+
+        window.app.bindings.dayWeekViewModel.setDays(dayModels,( payments.length > 0 ));
     },
 
     bestSeller: function(payments, productSoldcounts)
     {
         var self = this;
         var bestSellerPrice = 0
+          , bestSellerCount = _.max(productSoldcounts)
           , bestSellerName = "";
 
         _.each(productSoldcounts, function(max, key){
 
             //get the key and loop through the payments to get the total price of the item
-            if ( max === _.max(productSoldcounts) )
+            if ( max === bestSellerCount )
             {
                 _.each(payments, function(payment, i){
                     //loop through products
@@ -184,27 +192,22 @@ var _jp_ChartView = Backbone.View.extend({
             }
         });
 
-        window.app.bindings.bestSellerViewModel.price( "with a total of " + self.formatPrice(bestSellerPrice, self.currency) );
-        window.app.bindings.bestSellerViewModel.best(bestSellerName);
-        window.app.bindings.bestSellerViewModel.hasValue( ( payments.length > 0 ) );
+        window.app.bindings.bestSellerViewModel.set(bestSellerCount, bestSellerName, self.formatPrice(bestSellerPrice, self.currency), ( payments.length > 0 ));
     },
 
     productList: function(payments, questions, productSoldcounts)
     {
         console.log(payments, questions);
-        var self = this;
+        var self = this
+          , totalSoldCount = 0
+          , totalSoldPrice = 0;
 
-        var Product = function(data)
-        {
-            this.name = ko.observable(data.name);
-            this.price = ko.observable(data.price);
-            this.soldCount = ko.observable(data.soldCount);
-            this.soldTotal = ko.observable(data.soldTotal);
-        };
+        window.app.bindings.productListViewModel.hasValue( ( payments.length > 0 ) );
+
+        if ( payments.length < 1 ) return false;
 
         //push headers for list
-        window.app.bindings.productListViewModel.products.removeAll();
-        window.app.bindings.productListViewModel.products.push(new Product({name:"Name", price:'Price', soldCount:"Count", soldTotal:"Total"}));
+        window.app.bindings.productListViewModel.setHeaders();
 
         //get the products
         _.each(questions.products, function(product, i){
@@ -217,6 +220,9 @@ var _jp_ChartView = Backbone.View.extend({
             {
                 soldCount = productSoldcounts[product_name];
                 soldTotal = (product.price * soldCount);
+
+                totalSoldCount += soldCount;
+                totalSoldPrice += soldTotal;
             }
 
             var model = {
@@ -226,10 +232,11 @@ var _jp_ChartView = Backbone.View.extend({
                 soldTotal: self.formatPrice(soldTotal, self.currency)
             };
 
-            window.app.bindings.productListViewModel.products.push( new Product(model) );
+            window.app.bindings.productListViewModel.setProducts(model);
         });
 
-        window.app.bindings.productListViewModel.hasValue( ( payments.length > 0 ) );
+        //count the total price sold again and total count
+        window.app.bindings.productListViewModel.setLast(totalSoldCount, self.formatPrice(totalSoldPrice, self.currency));
     },
 
     info: function(payments, questions)

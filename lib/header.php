@@ -51,6 +51,7 @@
     '. $jotformFiles .'
     <script type="text/javascript" src="' . HTTP_URL . 'js/lib/charts/dx.chartjs.js"></script>
     <script type="text/javascript" src="' . HTTP_URL . 'js/lib/charts/globalize.js"></script>
+    <script type="text/javascript" src="' . HTTP_URL . 'js/scripts/ko-bindings.js"></script>
     <script type="text/javascript" src="' . HTTP_URL . 'js/scripts/account-view.js"></script>
     <script type="text/javascript" src="' . HTTP_URL . 'js/scripts/form-view.js"></script>
     <script type="text/javascript" src="' . HTTP_URL . 'js/scripts/property-view.js"></script>
