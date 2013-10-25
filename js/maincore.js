@@ -88,6 +88,7 @@ $(window).load(function(){
 
                 this.handleMenuHeight(function(){
                     this.initJF(function(){
+                        window.app.bindings.loader.change('Verifying user...');
                         window.app.accountView.handleJFUser(function(){
                             //remove modal
                             window.app.bindings.loader.hide();

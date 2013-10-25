@@ -1,3 +1,9 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic);
+.jotpayment-head .pure-menu.pure-menu-horizontal {
+  background: #2ECC71;
+  border: 1px solid #499C7C;
+  padding: 20px 0px;
+}
 .jotpayment-head .pure-menu.pure-menu-horizontal a.pure-menu-heading {
   font-family: 'League Gothic';
   font-size: 180%;
@@ -5,4 +11,50 @@
 .jotpayment-head .pure-menu.pure-menu-horizontal a.pure-menu-heading h1 {
   margin: 0px;
   font-size: 50px;
+  color: #fff;
+  font-family: 'Lato', Calibri, Arial, sans-serif;
+  font-weight: normal;
+}
+.jotpayment-head .pure-menu.pure-menu-horizontal a.pure-menu-heading h1 strong {
+  color: rgba(0, 0, 0, 0.1);
+}
+.jotpayment-head .pure-menu-selected a {
+  color: #fff;
+}
+.jotpayment-head .pure-menu li a:hover,
+.jotpayment-head .pure-menu li a:focus {
+  color: #fff;
+  background: #28B362;
+}
+.jotpayment-head .account_info {
+  position: absolute;
+  right: 10px;
+  top: 20px;
+}
+.jotpayment-head .account_info .account-div {
+  float: left;
+  text-align: right;
+}
+.jotpayment-head .account_info .account-div.information {
+  margin: 10px;
+}
+.jotpayment-head .account_info .account-div.information .account-info-div.name {
+  color: #F9FF5E;
+}
+.jotpayment-head .account_info .account-div.information .account-info-div.logout a {
+  font-size: 12px;
+  color: #fff;
+  padding: 0px;
+  margin: 0px;
+}
+.jotpayment-head .account_info .account-div.information .account-info-div.logout a:hover {
+  text-decoration: underline;
+}
+.jotpayment-head .account_info .account-div.image {
+  width: 50px;
+  height: 50px;
+  float: right;
+  border-radius: 25px;
+  border: 1px solid #fff;
+  background-position: center center;
 }

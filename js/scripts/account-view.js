@@ -54,6 +54,9 @@ var _jp_AccountView = Backbone.View.extend({
             //check if active 
             if ( String(user.status).toLowerCase() === 'active' ) {
                 self.user = user;
+
+                //apply account info binding
+                window.app.bindings.account.set(user.username, user.avatarUrl);
             } else {
                 alert("User is not ACTIVE anymore\nPlease contact JotForm!");
             }

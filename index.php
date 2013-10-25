@@ -48,7 +48,7 @@
         <div class="loader_inner">
             <div id="loader_str">
                 <img src="css/images/loading.gif" alt="Loading"/>
-                Verifying user data...
+                <span data-bind='text: msg'>Loading Application...</span>
             </div>
         </div>
     </div>
@@ -60,6 +60,18 @@
                     <li class="pure-menu-selected"><a href="#"><i class="fa fa-home"></i>Home</a></li>
                     <li><a href="#"><i class="fa fa-phone"></i>Contact</a></li>
                 </ul>
+                <div class="account_info">
+                    <div class="account-container">
+                        <div class="account-div information">
+                            <div class="account-info-div name" data-bind="text: username"></div>
+                            <div class="account-info-div logout">
+                                <a id="logout" href="#" data-bind="click: logout">Logout</a>
+                            </div>
+                        </div>
+                        <div class="account-div image" data-bind="style : {'background-image':avatar()}"></div>
+                        <div class="clearer"></div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-search" id="form_search" data-bind="event: { mouseover: showClose, mouseout: hideClose }">

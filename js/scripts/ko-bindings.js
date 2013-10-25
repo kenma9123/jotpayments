@@ -54,6 +54,7 @@ var Product = function(data)
     this.soldCount = ko.observable(data.soldCount);
     this.soldTotal = ko.observable(data.soldTotal);
 };
+
 var productListViewModel = function()
 {
     this.heading = '<i class="fa fa-list-alt icons"></i>Product List';
@@ -120,7 +121,7 @@ window.app.bindings.formSearch = {
     pickform: function(data, e) {
         console.log("cache", window.app.formView.cache.forms);
 
-        window.app.bindings.contentMsg.changeMsg("Initializing Formpicker...");
+        window.app.bindings.contentMsg.changeMsg("Loading Formpicker...");
 
         var el = $(e.target);
         if ( typeof el.attr('data-ladda') === 'undefined' && el.hasClass('ladda-button') )
@@ -169,12 +170,30 @@ window.app.bindings.contentMsg = {
 };
 
 window.app.bindings.loader = {
+    msg: ko.observable('Loading Application...'),
     show: ko.observable(true),
+    change: function(msg) {
+        this.msg(msg);
+    },
     hide: function() {
         this.show(false);
     }
 };
 
+window.app.bindings.account = {
+    username: ko.observable(),
+    avatar: ko.observable(),
+    set: function(username, avatar) {
+        this.username(username);
+        this.avatar('url(' + avatar + ')');
+    },
+    logout: function() {
+        JF.logout();
+        window.location.href = window.base;
+    }
+};
+
+ko.applyBindings( window.app.bindings.account, $(".account_info")[0]);
 ko.applyBindings( window.app.bindings.loader, $("#loader")[0]);
 ko.applyBindings( window.app.bindings.formSearch, $("#form_search")[0]);
 ko.applyBindings( window.app.bindings.contentMsg, $(".notif-history-content")[0]);    
