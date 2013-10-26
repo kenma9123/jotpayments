@@ -76,9 +76,6 @@
         </div>
         <div class="form-search" id="form_search" data-bind="event: { mouseover: showClose, mouseout: hideClose }">
             <button class="pure-button pure-blue picker-btn ladda-button" data-bind="click: pickform">Pick your Form here</button>
-            <!-- <div class="form-picker-btn">or </div> -->
-            <!-- <input class="type-ahead" type="text" data-bind="attr:{placeholder:placeholderVal}"/> -->
-            <!-- <div class="close dn" data-bind="css: { dn: show_close() == false }, click: clear">&#10006;</div> -->
         </div>
 
         <div class="jotpayment-main-cont">
@@ -86,17 +83,6 @@
                 <h1 class="heading" data-bind="html: msg">No Payment history to display</h1>
             </div>
             <div>
-<!--                 <div class="left-cell jotpayment-menu">
-                    <div class="pure-menu pure-menu-open">
-                        <a class="pure-menu-heading user-forms-title">Your Forms</a>
-                        <ul id="user-forms" data-bind="foreach: forms">
-                            <li data-bind="attr: {id: id}">
-                                <a href="#" data-bind="text: name, attr: {href: url, title: name}, click: $parent.process">Loading forms...</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div> -->
-
                 <div class="jotpayment-content total_payments">
                     <div id="total_payments" data-bind="visible: hasValue() == true">
                         <h1 class="heading" data-bind="html: heading"></h1>

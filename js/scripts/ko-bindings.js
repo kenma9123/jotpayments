@@ -8,15 +8,21 @@ window.app.bindings = {};
 //total Payments viewmodel
 var totalPaymentsViewModel = function()
 {
-    this.heading = "Total Payments";
+    this.heading = ko.observable("Total Payments");
     this.total_payments = ko.observable();
     this.hasValue = ko.observable(false);
+
+    this.clear = function() {
+        this.heading();
+        this.total_payments();
+        this.hasValue(false);
+    };
 };
 
 //payment week viewmodel
 var dayWeekViewModel = function()
 {
-    this.heading = '<i class="fa fa-money icons"></i>This week';
+    this.heading = ko.observable('<i class="fa fa-money icons"></i>This week');
     this.days = ko.observableArray([]);
     this.hasValue = ko.observable(false);
 
@@ -25,6 +31,12 @@ var dayWeekViewModel = function()
         this.days(days);
         this.hasValue(hasValue);
     };
+
+    this.clear = function() {
+        this.heading();
+        this.days.removeAll();
+        this.hasValue(false);
+    };
 };
 
 //best seller view model
@@ -32,7 +44,7 @@ var bestSellerViewModel = function()
 {
     this.name = ko.observable();
     this.info = ko.observable();
-    this.heading = '<i class="fa fa-star icons"></i>Best Seller';
+    this.heading = ko.observable('<i class="fa fa-star icons"></i>Best Seller');
     this.hasValue = ko.observable(false);
 
     this.set = function(count, name, formated, hasValue)
@@ -43,7 +55,14 @@ var bestSellerViewModel = function()
             this.info('x<span class="big-font">'+count+'</span> quantity sold<br />a total of<br/><span class="big-font">'+formated+'</span>');
             this.hasValue(hasValue);
         }
-    }
+    };
+
+    this.clear = function() {
+        this.heading();
+        this.name();
+        this.info();
+        this.hasValue(false);
+    };
 };
 
 //product list view model
@@ -57,7 +76,7 @@ var Product = function(data)
 
 var productListViewModel = function()
 {
-    this.heading = '<i class="fa fa-list-alt icons"></i>Product List';
+    this.heading = ko.observable('<i class="fa fa-list-alt icons"></i>Product List');
     this.products = ko.observableArray([]);
     this.hasValue = ko.observable(false);
 
@@ -90,6 +109,12 @@ var productListViewModel = function()
     {
         this.products.push( new Product(model) );
     };
+
+    this.clear = function() {
+        this.heading();
+        this.products.removeAll();
+        this.hasValue(false);
+    };
 };
 
 //register bindings
@@ -108,20 +133,28 @@ ko.applyBindings(window.app.bindings.productListViewModel, $("#product_list")[0]
 window.app.bindings.formSearch = {
     placeholderVal: ko.observable("Loading forms..."),
     show_close: ko.observable(false),
-    showClose: function() {
+    showClose: function()
+    {
         this.show_close(true);
     },
-    hideClose: function() {
+    hideClose: function()
+    {
         this.show_close(false);
     },
-    clear: function() {
+    clear: function()
+    {
         typeahead.val("");
         $(".form-search .tt-hint").val("");
     },
-    pickform: function(data, e) {
+    pickform: function(data, e)
+    {
         console.log("cache", window.app.formView.cache.forms);
 
         window.app.bindings.contentMsg.changeMsg("Loading Formpicker...");
+        window.app.bindings.totalPaymentsViewModel.clear();
+        window.app.bindings.dayWeekViewModel.clear();
+        window.app.bindings.bestSellerViewModel.clear();
+        window.app.bindings.productListViewModel.clear();
 
         var el = $(e.target);
         if ( typeof el.attr('data-ladda') === 'undefined' && el.hasClass('ladda-button') )
@@ -157,25 +190,35 @@ window.app.bindings.formSearch = {
 window.app.bindings.contentMsg = {
     msg: ko.observable("No Payment history to display"),
     show_msg: ko.observable(true),
-    changeMsg: function(msg) {
+    changeMsg: function(msg)
+    {
         this.msg(msg);
         this.show();
     },
-    show: function() {
+    show: function()
+    {
         this.show_msg(true);
     },
-    hide: function() {
+    hide: function()
+    {
         this.show_msg(false);
+    },
+    reset: function()
+    {
+        this.msg("No Payment history to display");
+        this.show();
     }
 };
 
 window.app.bindings.loader = {
     msg: ko.observable('Loading Application...'),
     show: ko.observable(true),
-    change: function(msg) {
+    change: function(msg)
+    {
         this.msg(msg);
     },
-    hide: function() {
+    hide: function()
+    {
         this.show(false);
     }
 };
@@ -183,11 +226,13 @@ window.app.bindings.loader = {
 window.app.bindings.account = {
     username: ko.observable(),
     avatar: ko.observable(),
-    set: function(username, avatar) {
+    set: function(username, avatar)
+    {
         this.username(username);
         this.avatar('url(' + avatar + ')');
     },
-    logout: function() {
+    logout: function()
+    {
         JF.logout();
         window.location.href = window.base;
     }

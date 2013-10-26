@@ -131,6 +131,13 @@ var _jp_FormView = Backbone.View.extend({
 
                     console.log(payments);
 
+                    //if no payment fields, return error
+                    if ( payments.length < 1 )
+                    {
+                        window.app.bindings.contentMsg.reset();
+                        return false;
+                    }
+
                     window.app.propertyView.fetch(formID, function(questions){
                         window.app.chartView.info(payments, questions);
                     });
