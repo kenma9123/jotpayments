@@ -176,6 +176,14 @@ window.app.bindings.formSearch = {
                   };
                 console.log(selectedFormObj);
                 el.ladda('destroy');
+
+                //check if there is a submission
+                if ( selectedFormObj.count == 0 )
+                {
+                    window.app.bindings.contentMsg.changeMsg("Form is empty.");
+                    return false;
+                }
+
                 window.app.formView.getPayments(data);
                 window.app.bindings.contentMsg.changeMsg("Reading Form data...");
             },
