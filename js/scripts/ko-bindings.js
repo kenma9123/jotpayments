@@ -117,17 +117,32 @@ var productListViewModel = function()
     };
 };
 
+var chartsViewModel = function()
+{
+    this.heading = ko.observable('<i class="fa fa-bar-chart-o icons"></i>Products <span class="heading low-opacity">Graph</span>');
+    this.charts = ko.observable();
+    this.hasValue = ko.observable(false);
+
+    this.clear = function() {
+        this.heading();
+        this.charts();
+        this.hasValue(false);
+    };
+};
+
 //register bindings
 window.app.bindings.totalPaymentsViewModel = new totalPaymentsViewModel();
 window.app.bindings.dayWeekViewModel = new dayWeekViewModel();
 window.app.bindings.bestSellerViewModel = new bestSellerViewModel();
 window.app.bindings.productListViewModel = new productListViewModel();
+window.app.bindings.chartsViewModel = new chartsViewModel();
 
 //apply bindings
 ko.applyBindings(window.app.bindings.totalPaymentsViewModel, $("#total_payments")[0]);
 ko.applyBindings(window.app.bindings.dayWeekViewModel, $('#this_week_payments')[0]);
 ko.applyBindings(window.app.bindings.bestSellerViewModel, $("#best_seller")[0]);
 ko.applyBindings(window.app.bindings.productListViewModel, $("#product_list")[0]);
+ko.applyBindings(window.app.bindings.chartsViewModel, $("#range-chart")[0]);
 
 //single object bindings
 window.app.bindings.formSearch = {
@@ -155,6 +170,7 @@ window.app.bindings.formSearch = {
         window.app.bindings.dayWeekViewModel.clear();
         window.app.bindings.bestSellerViewModel.clear();
         window.app.bindings.productListViewModel.clear();
+        window.app.bindings.chartsViewModel.clear();
 
         var el = $(e.target);
         if ( typeof el.attr('data-ladda') === 'undefined' && el.hasClass('ladda-button') )
@@ -184,8 +200,8 @@ window.app.bindings.formSearch = {
                     return false;
                 }
 
-                window.app.formView.getPayments(data);
                 window.app.bindings.contentMsg.changeMsg("Reading Form data...");
+                window.app.formView.getPayments(selectedFormObj);
             },
             onClose: function()
             {

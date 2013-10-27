@@ -9,6 +9,13 @@ var _jp_FormView = Backbone.View.extend({
         });
 
         self.cache = {};
+        self.cache.submissions = {};
+
+        //limit per request - default is 1000
+        self.maximumRequestLimit = 1000;
+
+        //maximum data to fetch from the server if submission counts is greater than maximumRequestLimit - default 10000
+        self.maximumRequest = 10000;
 
         this.supported_payment_types = [
             'control_dwolla',
@@ -26,32 +33,92 @@ var _jp_FormView = Backbone.View.extend({
         ];
     },
 
-    fetchForms: function(next)
+    fetchSubmissions: function(form, next)
     {
         var self = this;
-        var query = {
-            'offset': 0,
-            'limit': 100,
-            'filter': {status : 'ENABLED'},
-            'orderby': 'updated_at',
-            'direction': 'DESC'
-        };
 
-        JF.getForms(query, function(resp) {
-            if ( resp.length > 0 )
+        //get data from cache if any to lessen load times
+        if ( self.cache.submissions[ form.id ] )
+        {
+            if (next) next(self.cache.submissions[ form.id ]);
+        }
+        else
+        {
+            var maxLimit = self.maximumRequestLimit
+              , submissionCount = form.count;
+
+            if ( submissionCount > maxLimit && confirm("Your form had many submissions, this may take a while to process the data.\nPress OK to continue, otherwise load the first 1000 submissions.") )
             {
-                self.cache.forms = resp;
-                if (next) next(resp);
+                self.multipleRequestStart = 1;
+                var submissionMultipleAjax = function(formID)
+                {
+                    console.log("multiple request");
+                    var offset = ( ( self.multipleRequestStart - 1 ) * ( maxLimit ) );
+                    var totalRequest = Math.ceil( ( submissionCount > self.maximumRequest ? self.maximumRequest : submissionCount ) / maxLimit );
+
+                    // console.log('come n', self.multipleRequestStart, "offset", offset);
+                    if ( self.multipleRequestStart <= totalRequest )
+                    {
+                        // self.misc.modifyLoading(self.multipleRequestStart+"/"+totalRequest);
+
+                        //get data from the server
+                        JF.getFormSubmissions(formID, {
+                            offset: offset,
+                            limit: maxLimit
+                        }, function(submission){
+                            //increment counter for next request
+                            self.multipleRequestStart++;
+
+                            //save data
+                            if ( self.cache.submissions[ formID ] )
+                            {
+                                self.cache.submissions[ formID ] = array_merge( self.cache.submissions[ formID ], submission);
+                            }
+                            else
+                            {
+                                self.cache.submissions[ formID ] = submission;
+                            }
+
+                            //do another request
+                            submissionMultipleAjax(formID);
+                        }, function error(){
+                            console.log("Something went wrong fetching form submissions");
+                        });
+                    }
+                    else
+                    {
+                        // console.log("Request reached", self.multipleRequestStart, totalRequest);
+                        // console.log("formsubmissionTemp", self.cache.submissions[ form.id ]);
+                        if ( next ) next( self.cache.submissions[ form.id ] );
+                    }
+                };
+
+                //get data in parts
+                submissionMultipleAjax(form.id);
             }
             else
             {
-                alert('No forms detected!');
-                return false;
+                //show loading indicator
+                // self.misc.showStart( self._elem.mainContainer_el );
+
+                // console.log('none', submissionCount);
+                JF.getFormSubmissions(form.id, {
+                    offset: 0,
+                    limit: submissionCount
+                }, function(submission){
+                    console.log(submission);
+
+                    if ( submission.length == 0 ) {
+                        console.log("No submissions available to be shown");
+                    }
+
+                    self.cache.submissions[ form.id ] = submission;
+                    if ( next ) next ( submission );
+                }, function error(){
+                    console.log("Something went wrong fetching form submissions");
+                });
             }
-        }, function error(){
-            console.error("Something went wrong when fetching rest of your Forms, retying..");
-            self.fetchForms(next);
-        });
+        }
     },
 
     getPayments: function(form)
@@ -61,10 +128,9 @@ var _jp_FormView = Backbone.View.extend({
 
         if ( !this.isProcessing )
         {
-            var formID = form.id;
             var product_data = [];
 
-            JF.getFormSubmissions(formID, function(submissions){
+            self.fetchSubmissions(form, function(submissions){
                 console.log('submissions', submissions);
 
                 if ( submissions.length > 0 )
@@ -138,7 +204,7 @@ var _jp_FormView = Backbone.View.extend({
                         return false;
                     }
 
-                    window.app.propertyView.fetch(formID, function(questions){
+                    window.app.propertyView.fetch(form.id, function(questions){
                         window.app.chartView.info(payments, questions);
                     });
                 }

@@ -1,3 +1,17 @@
+Date.prototype.getWeek = function(start)
+{
+    //Calcing the starting point
+    start = start || 0;
+    var today = new Date(this.setHours(0, 0, 0, 0));
+    var day = today.getDay() - start;
+    var date = today.getDate() - day;
+
+    // Grabbing Start/End Dates
+    var StartDate = new Date(today.setDate(date));
+    var EndDate = new Date(today.setDate(date + 6));
+    return [StartDate, EndDate];
+};
+
 var _jp_ChartView = Backbone.View.extend({
 
     initialize: function()
@@ -22,6 +36,21 @@ var _jp_ChartView = Backbone.View.extend({
         ];
     },
 
+    getFormattedKey: function(name)
+    {
+        return String(name).replace(/\s/g,'_');
+    },
+
+    /**
+     * Sort an array by date
+     */
+    sortArray: function( a, b )
+    {
+        a = new Date( a[ 0 ] );
+        b = new Date( b [ 0 ] );
+        return ( a < b ) ? -1 : ( ( a > b ) ? 1 : 0 );
+    },
+
     formatPrice: function( price, currency )
     {
         var currency_sign = '';
@@ -39,13 +68,14 @@ var _jp_ChartView = Backbone.View.extend({
 
     countPaymentProducts: function(payments, next)
     {
-        var products_payment_count = {};
+        var self = this
+          , products_payment_count = {};
         _.each(payments, function(payment, i){
             var products = payment.product;
 
             _.each(products, function(product, i){
 
-                var product_name = String(product.data.name).replace(/\s/g,'_');
+                var product_name = self.getFormattedKey(product.data.name);
                 if ( typeof products_payment_count[product_name] === 'undefined' )
                 {
                     products_payment_count[product_name] = 0;
@@ -85,17 +115,16 @@ var _jp_ChartView = Backbone.View.extend({
           , payment_on_day = {}
           , days_week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+        var thisWeek = new Date().getWeek();
+
         var getLastSunday = function()
-        {
-            var today = new Date()
-              , dif = (today.getDay() + 7) % 7;
-            return new Date(today - dif * 24*60*60*1000);
+        {   
+            return new Date(thisWeek[0]);
         };
 
         var getNextSunday = function()
         {
-            var today = new Date();
-            return new Date(today.getFullYear(),today.getMonth(),today.getDate()+(7-today.getDay()))
+            return new Date(thisWeek[1]);
         };
 
         //loop through payments
@@ -106,12 +135,12 @@ var _jp_ChartView = Backbone.View.extend({
             _.each(products, function(product, i){
 
                 //get each product information/data
-                var product_created = product.created_at
+                var product_created = String(product.created_at)
                   , product_item = product.item
                   , product_data = product.data
                   , product_price = product_data.price;
 
-                var date = moment(product_created).tz(window.app.accountView.user.time_zone)._d;
+                var date = moment(product_created).tz(window.app.accountView.user.time_zone).format();
                 var payment_day = new Date(date);
 
                 //check if payment date falls within this week only
@@ -248,6 +277,7 @@ var _jp_ChartView = Backbone.View.extend({
         this.countPaymentProducts(payments, function(productSoldcounts){
             this.bestSeller(payments, productSoldcounts);
             this.productList(payments, questions, productSoldcounts);
+            this.range(payments, questions, productSoldcounts);
 
             //hide contentmsg
             if ( payments.length > 0 ) {
@@ -256,186 +286,139 @@ var _jp_ChartView = Backbone.View.extend({
         });
     },
 
-    pie: function(payment)
+    range: function(payments, questions, productSoldcounts)
     {
-        var dataSource = [
-            { product: "Honda City", area: 40 },
-            { product: "Honda Civic", area: 15 },
-            { product: "Toyota Vios", area: 20 },
-            { product: "Hyundai Elantra", area: 10 },
-        ];
+        console.log("range payments", payments, questions, productSoldcounts);
+        window.app.bindings.chartsViewModel.hasValue(true);
 
-        $(".pie-chart").dxPieChart({
-            dataSource: dataSource,
-            series: [
+        var self = this
+          , chart_data = {};
+
+        _.each(payments, function(val){
+            _.each(val.product, function(prod_val){
+                var product_data = prod_val.data
+                  , product_price = product_data.price
+                  , product_date = String(prod_val.created_at).split(' ')[0];
+
+                //add the y(n) to obj depends on how many products
+                if ( typeof chart_data[product_date] === 'undefined' )
                 {
-                    argumentField: "product",
-                    valueField: "area",
-                    label: {
-                        visible: true,
-                        connector: {
-                            visible: false,
-                            width: 1
-                        },
-                        position: 'inside'
-                    }
+                    chart_data[product_date] = {};
                 }
-            ],
-            margin: {
-                top:0,
-                bottom:0,
-                left:0,
-                right:0
-            },
-            tooltip:{
-                enabled: true
-            },
-            legend: {
-                visible: true
-            },
-            title: "Best Sellers"
-        });
-    },
 
-    range: function()
-    {
-        var zoomingData =  [
-            { arg: 10, y1: -12, y2: 10, y3: 32 },
-            { arg: 20, y1: -32, y2: 30, y3: 12 },
-            { arg: 40, y1: -20, y2: 20, y3: 30 },
-            { arg: 50, y1: -39, y2: 50, y3: 19 },
-            { arg: 60, y1: -10, y2: 10, y3: 15 },
-            { arg: 75, y1: 10, y2: 10, y3: 15 },
-            { arg: 80, y1: 0, y2: 55, y3: 13 },
-            { arg: 90, y1: 5, y2: 80, y3: 14 },
-            { arg: 100, y1: 50, y2: 90, y3: 90 },
-            { arg: 105, y1: 40, y2: 95, y3: 120 },
-            { arg: 110, y1: -12, y2: 10, y3: 32 },
-            { arg: 120, y1: -32, y2: 30, y3: 12 },
-            { arg: 130, y1: -20, y2: 20, y3: 30 },
-            { arg: 10, y1: -12, y2: 10, y3: 32 },
-            { arg: 20, y1: -32, y2: 30, y3: 12 },
-            { arg: 40, y1: -20, y2: 20, y3: 30 },
-            { arg: 50, y1: -39, y2: 50, y3: 19 },
-            { arg: 60, y1: -10, y2: 10, y3: 15 },
-            { arg: 75, y1: 10, y2: 10, y3: 15 },
-            { arg: 80, y1: 30, y2: 50, y3: 13 },
-            { arg: 90, y1: 40, y2: 50, y3: 14 },
-            { arg: 100, y1: 50, y2: 90, y3: 90 },
-            { arg: 105, y1: 40, y2: 175, y3: 120 },
-            { arg: 110, y1: -12, y2: 10, y3: 32 },
-            { arg: 120, y1: -32, y2: 30, y3: 12 },
-            { arg: 130, y1: -20, y2: 20, y3: 30 },
-            { arg: 140, y1: -12, y2: 10, y3: 32 },
-            { arg: 150, y1: -32, y2: 30, y3: 12 },
-            { arg: 160, y1: -20, y2: 20, y3: 30 },
-            { arg: 170, y1: -39, y2: 50, y3: 19 },
-            { arg: 180, y1: -10, y2: 10, y3: 15 },
-            { arg: 185, y1: 10, y2: 10, y3: 15 },
-            { arg: 190, y1: 30, y2: 100, y3: 13 },
-            { arg: 200, y1: 40, y2: 110, y3: 14 },
-            { arg: 210, y1: 50, y2: 90, y3: 90 },
-            { arg: 220, y1: 40, y2: 95, y3: 120 },
-            { arg: 230, y1: -12, y2: 10, y3: 32 },
-            { arg: 240, y1: -32, y2: 30, y3: 12 },
-            { arg: 255, y1: -20, y2: 20, y3: 30 },
-            { arg: 270, y1: -12, y2: 10, y3: 32 },
-            { arg: 280, y1: -32, y2: 30, y3: 12 },
-            { arg: 290, y1: -20, y2: 20, y3: 30 },
-            { arg: 295, y1: -39, y2: 50, y3: 19 },
-            { arg: 300, y1: -10, y2: 10, y3: 15 },
-            { arg: 310, y1: 10, y2: 10, y3: 15 },
-            { arg: 320, y1: 30, y2: 100, y3: 13 },
-            { arg: 330, y1: 40, y2: 110, y3: 14 },
-            { arg: 340, y1: 50, y2: 90, y3: 90 },
-            { arg: 350, y1: 40, y2: 95, y3: 120 },
-            { arg: 360, y1: -12, y2: 10, y3: 32 },
-            { arg: 367, y1: -32, y2: 30, y3: 12 },
-            { arg: 370, y1: -20, y2: 20, y3: 30 },
-            { arg: 380, y1: -12, y2: 10, y3: 32 },
-            { arg: 390, y1: -32, y2: 30, y3: 12 },
-            { arg: 400, y1: -20, y2: 20, y3: 30 },
-            { arg: 410, y1: -39, y2: 50, y3: 19 },
-            { arg: 420, y1: -10, y2: 10, y3: 15 },
-            { arg: 430, y1: 10, y2: 10, y3: 15 },
-            { arg: 440, y1: 30, y2: 100, y3: 13 },
-            { arg: 450, y1: 40, y2: 110, y3: 14 },
-            { arg: 460, y1: 50, y2: 90, y3: 90 },
-            { arg: 470, y1: 40, y2: 95, y3: 120 },
-            { arg: 480, y1: -12, y2: 10, y3: 32 },
-            { arg: 490, y1: -32, y2: 30, y3: 12 },
-            { arg: 500, y1: -20, y2: 20, y3: 30 },
-            { arg: 510, y1: -12, y2: 10, y3: 32 },
-            { arg: 520, y1: -32, y2: 30, y3: 12 },
-            { arg: 530, y1: -20, y2: 20, y3: 30 },
-            { arg: 540, y1: -39, y2: 50, y3: 19 },
-            { arg: 550, y1: -10, y2: 10, y3: 15 },
-            { arg: 555, y1: 10, y2: 10, y3: 15 },
-            { arg: 560, y1: 30, y2: 100, y3: 13 },
-            { arg: 570, y1: 40, y2: 110, y3: 14 },
-            { arg: 580, y1: 50, y2: 90, y3: 90 },
-            { arg: 590, y1: 40, y2: 95, y3: 12 },
-            { arg: 600, y1: -12, y2: 10, y3: 32 },
-            { arg: 610, y1: -32, y2: 30, y3: 12 },
-            { arg: 620, y1: -20, y2: 20, y3: 30 },
-            { arg: 630, y1: -12, y2: 10, y3: 32 },
-            { arg: 640, y1: -32, y2: 30, y3: 12 },
-            { arg: 650, y1: -20, y2: 20, y3: 30 },
-            { arg: 660, y1: -39, y2: 50, y3: 19 },
-            { arg: 670, y1: -10, y2: 10, y3: 15 },
-            { arg: 680, y1: 10, y2: 10, y3: 15 },
-            { arg: 690, y1: 30, y2: 100, y3: 13 },
-            { arg: 700, y1: 40, y2: 110, y3: 14 },
-            { arg: 710, y1: 50, y2: 90, y3: 90 },
-            { arg: 720, y1: 40, y2: 95, y3: 120 },
-            { arg: 730, y1: 20, y2: 190, y3: 130 },
-            { arg: 740, y1: -32, y2: 30, y3: 12 },
-            { arg: 750, y1: -20, y2: 20, y3: 30 },
-            { arg: 760, y1: -12, y2: 10, y3: 32 },
-            { arg: 770, y1: -32, y2: 30, y3: 12 },
-            { arg: 780, y1: -20, y2: 20, y3: 30 },
-            { arg: 790, y1: -39, y2: 50, y3: 19 },
-            { arg: 800, y1: -10, y2: 10, y3: 15 },
-            { arg: 810, y1: 10, y2: 10, y3: 15 },
-            { arg: 820, y1: 30, y2: 100, y3: 13 },
-            { arg: 830, y1: 40, y2: 110, y3: 14 },
-            { arg: 840, y1: 50, y2: 90, y3: 90 },
-            { arg: 850, y1: 40, y2: 95, y3: 120 },
-            { arg: 860, y1: -12, y2: 10, y3: 32 },
-            { arg: 870, y1: -32, y2: 30, y3: 12 },
-            { arg: 880, y1: -20, y2: 20, y3: 30 }
-        ];
-        var series = [{
-                argumentField: "arg",
-                valueField: "y1",
-                name: 'Honda city'
-            }, {
-                argumentField: "arg",
-                valueField: "y2",
-                name: 'Honda civic'
-            }, {
-                argumentField: "arg",
-                valueField: "y3",
-                name: 'Toyota Vios'
-            }];
+                var product_name_key = self.getFormattedKey(product_data.name);
+                if ( typeof chart_data[product_date][ product_name_key ] === 'undefined' )
+                {
+                    chart_data[product_date][ product_name_key ] = {
+                        price: product_price,
+                        count: 0,
+                        total: 0
+                    };
+                }
+
+                chart_data[product_date][ product_name_key ].total += product_price;
+                chart_data[product_date][ product_name_key ].count += 1;
+
+                // chart_data[product_date] = array_merge(productSoldcounts, chart_data[product_date]);
+            });
+        });
+
+        //after getting the products and prices on each date
+        //arrange the chart source data
+        var zoomingData = []
+          , seriesData = [];
+
+        _.each(chart_data, function(val, key){
+            var dataKey = ''
+              , data = {
+                    arg: new Date(key)
+                }
+              , sData = []
+              , x = 1;
+
+              console.log(data);
+
+            //use the product sold count list to generated a (y) data for the chart
+            _.each(productSoldcounts, function(prodVal, prodKey){
+                //if the product key is undefined set it to zero
+                if ( typeof chart_data[key][prodKey] === 'undefined' )
+                {
+                    chart_data[key][prodKey] = 0;
+                }
+                var dataField = ('y' + x);
+                data[dataField] = ( typeof chart_data[key][prodKey] === 'object' )
+                                    ? chart_data[key][prodKey].total : 0;
+
+                sData.push({
+                    argumentField: "arg",
+                    valueField: dataField,
+                    name: prodKey.replace(/_/g, ' ')
+                });
+
+                x++;
+            }); 
+
+            zoomingData.push(data);
+            if ( seriesData.length  < 1 )
+            {
+                seriesData = sData;
+            }
+        });
+        // chart_data.sort(self.sortArray);
+        console.log(chart_data);
+        console.log(zoomingData);
+        console.log(seriesData);
+        // return false;
+
+        // var zoomingData =  [
+        //     { arg: 10, y1: -12},
+        //     { arg: 20, y1: -32},
+        //     { arg: 40, y1: -20},
+        //     { arg: 50, y1: -39},
+        //     { arg: 60, y1: -10},
+        //     { arg: 75, y1: 10},
+        //     { arg: 80, y1: 0}
+        // ];
+        // var series = [{
+        //         argumentField: "arg",
+        //         valueField: "y1",
+        //         name: 'Honda city'
+        //     }, {
+        //         argumentField: "arg",
+        //         valueField: "y2",
+        //         name: 'Honda civic'
+        //     }, {
+        //         argumentField: "arg",
+        //         valueField: "y3",
+        //         name: 'Toyota Vios'
+        //     }];
 
         var model = {};
         model.chartOptions = {
             argumentAxis: {
-               minValueMargin: 0,
-               maxValueMargin: 0
+                minValueMargin: 0,
+                maxValueMargin: 0,
+                label: {
+                    format: 'shortDate'
+                }
             },
-            title: "Sales for each product",
             dataSource: zoomingData,
-            series: series,
+            series: seriesData,
+            commonSeriesSettings: {
+                type: 'spline'
+            },
             tooltip:{
-                enabled: true
+                enabled: true,
+                customizeText: function (e) {
+                    return self.formatPrice(e.valueText, self.currency) + ' on ' + moment(e.argumentText).format("dddd, MMMM Do");
+                }
             },
             legend: {
                 visible: true,
                 verticalAlignment: "top",
-                horizontalAlignment: "right"
-            },
+                horizontalAlignment: "center",
+                itemTextPosition: 'right'
+            }
         };
 
         model.rangeOptions = {
@@ -447,7 +430,7 @@ var _jp_ChartView = Backbone.View.extend({
             },
             dataSource: zoomingData,
             chart: {
-                series: series
+                series: seriesData
             },
             behavior: {
                 callSelectedRangeChanged: "onMoving"
@@ -459,11 +442,13 @@ var _jp_ChartView = Backbone.View.extend({
         };
 
         var html = [
-            '<div id="zoomedChart" data-bind="dxChart: chartOptions" style="height: 350px"></div>',
-            '<div data-bind="dxRangeSelector: rangeOptions" style="height: 80px"></div>'
+            '<div id="zoomedChart" style="height: 350px"></div>',
+            '<div id="selectorChart" style="height: 80px"></div>'
         ].join('');
 
-        $(".range-chart").append(html);
-        ko.applyBindings(model, $(".range-chart")[0]);
+        window.app.bindings.chartsViewModel.charts(html);
+
+        $(".range-chart #zoomedChart").dxChart(model.chartOptions);
+        $(".range-chart #selectorChart").dxRangeSelector(model.rangeOptions);
     }
 });

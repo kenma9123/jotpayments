@@ -83,43 +83,53 @@
                 <h1 class="heading" data-bind="html: msg">No Payment history to display</h1>
             </div>
             <div>
-                <div class="jotpayment-content total_payments">
+                <div class="jotpayment-content">
                     <div id="total_payments" data-bind="visible: hasValue() == true">
                         <h1 class="heading" data-bind="html: heading"></h1>
                         <h3 class="sub-heading" data-bind="html: total_payments"></h3>
                     </div>
-                    <div class="info-chart charts best_seller segoeUI-font">
-                        <div id="best_seller" data-bind="visible: hasValue() == true">
-                            <h1 class="heading" data-bind="html: heading"></h1>
-                            <h3 class="sub-heading" data-bind="html: name"></h3>
-                            <span class="mini-heading" data-bind="html: info"></span>
+                    <div id="total_payment_other_info">
+                        <div class="info-chart charts best_seller segoeUI-font">
+                            <div id="best_seller" data-bind="visible: hasValue() == true">
+                                <h1 class="heading" data-bind="html: heading"></h1>
+                                <h3 class="sub-heading" data-bind="html: name"></h3>
+                                <span class="mini-heading" data-bind="html: info"></span>
+                            </div>
                         </div>
+                        <div class="info-chart charts week_payments">
+                            <div id="this_week_payments" data-bind="visible: hasValue() == true">
+                                <h1 class="heading" data-bind="html: heading"></h1>
+                                <ul data-bind="foreach: days" class="segoeUI-font">
+                                    <li class="list">
+                                        <label class="labels" data-bind="html: day"></label>
+                                        <span class="labels payments" data-bind="html: payment, css: { 'topline': ($parent.days().length - 1) == $index()}"></span>
+                                        <div class="clearer"></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="info-chart charts product_list">
+                            <div id="product_list" data-bind="visible: hasValue() == true"> 
+                                <h1 class="heading" data-bind="html: heading"></h1>
+                                <ul data-bind="foreach: products" class="segoeUI-font products">
+                                    <li class="list">
+                                        <label class="labels name" data-bind="html: name"></label>
+                                        <label class="labels price" data-bind="html: price"></label>
+                                        <label class="labels soldCount" data-bind="html: soldCount, css: { 'topline': ($parent.products().length - 1) == $index()}"></label>
+                                        <label class="labels soldTotal" data-bind="html: soldTotal, css: { 'topline': ($parent.products().length - 1) == $index()}"></label>
+                                        <label class="clearer"></label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="clearer"></div>
                     </div>
-                    <div class="info-chart charts week_payments">
-                        <div id="this_week_payments" data-bind="visible: hasValue() == true">
-                            <h1 class="heading" data-bind="html: heading"></h1>
-                            <ul data-bind="foreach: days" class="segoeUI-font">
-                                <li class="list">
-                                    <label class="labels" data-bind="html: day"></label>
-                                    <span class="labels payments" data-bind="html: payment, css: { 'topline': ($parent.days().length - 1) == $index()}"></span>
-                                    <div class="clearer"></div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="info-chart charts product_list">
-                        <div id="product_list" data-bind="visible: hasValue() == true"> 
-                            <h1 class="heading" data-bind="html: heading"></h1>
-                            <ul data-bind="foreach: products" class="segoeUI-font products">
-                                <li class="list">
-                                    <label class="labels name" data-bind="html: name"></label>
-                                    <label class="labels price" data-bind="html: price"></label>
-                                    <label class="labels soldCount" data-bind="html: soldCount, css: { 'topline': ($parent.products().length - 1) == $index()}"></label>
-                                    <label class="labels soldTotal" data-bind="html: soldTotal, css: { 'topline': ($parent.products().length - 1) == $index()}"></label>
-                                    <label class="clearer"></label>
-                                </li>
-                            </ul>
-                        </div>
+                </div>
+                <div class="jotpayment-content" id="jotpayment_graph">
+                    <div id="range-chart" data-bind="visible: hasValue() == true">
+                        <h1 class="heading" data-bind="html: heading"></h1>
+                        <div class="range-chart" data-bind="html: charts"></div>
+                        <div class="clearer"></div>
                     </div>
                 </div>
             </div>
