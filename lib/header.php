@@ -24,7 +24,7 @@
     ';
 
     $styles = '
-        <link rel="Shortcut Icon" href="" />
+        <link rel="Shortcut Icon" href="' . HTTP_URL . 'css/images/favicon.ico" />
         <link rel="stylesheet" href="' . HTTP_URL . 'css/pure.css" type="text/css" media="screen, projection" />
         <link rel="stylesheet" href="' . HTTP_URL . 'css/jotpayments-main.css" type="text/css" media="screen, projection" />
         <link rel="stylesheet" href="' . HTTP_URL . 'css/font/font-awesome.css" type="text/css" media="screen, projection" />

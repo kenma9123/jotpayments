@@ -1,4 +1,8 @@
+html {
+    height: 100%;
+}
 body {
+    height: 100%;
     background: #ECF0F1;
     // overflow: hidden;
 }
@@ -104,6 +108,13 @@ body {
         right: 30px;
     }
 }
+
+.jotpayment-outer-div {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+}
+
 .jotpayment-main-cont {
     width: 100%;
 
@@ -122,7 +133,7 @@ body {
         background-clip: text;
 
         &.low-opacity {
-            background-color: #8F8F8F;
+            background-color: #00923E;
         }
     }
 
@@ -149,8 +160,44 @@ body {
     }
 }
 
+.jotpayment-footer,
+.footer-push {
+    height: atuo;
+}
+
+.jotpayment-footer {
+    background: #2ecc71;
+    border-top: 1px solid #048B3D;
+    padding: 20px;
+    color: #fff;
+    box-shadow: inset 0px 0px 1px #000;
+    box-sizing: border-box;
+
+    a {
+        color: #fff;
+        text-decoration:none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    p.infos {
+        text-align: center;
+        margin: 0px;
+
+        &.bignames {
+            margin: 5px;
+            font-size: 15px;
+        }
+
+        &.owner {
+            font-size: 11px;
+        }
+    }
+}
+
 .notif-history-content {
-    padding: 15% 0px;
+    padding-top: 15%;
     .heading {
         font-family: 'League Gothic';
         margin: 0;
@@ -280,7 +327,7 @@ body {
     &#jotpayment_graph {
         width: 98%;
         height: auto;
-        margin: 0 auto;
+        margin: 20px auto;
     }
 }
 

@@ -15,7 +15,7 @@
                 <div class="header">
                     <div class="header-content">
                         <a href="/" class="logo-link">
-                            <img src="css/images/jotformDevLogo.png" alt="JotForm Developers">
+                            <!-- <img src="css/images/jotformDevLogo.png" alt="JotForm Developers"> -->
                         </a>
                     </div>
                 </div>
@@ -54,8 +54,8 @@
     </div>
     <div class="jotpayment-outer-div">
         <div class="jotpayment-head">
-            <div class="pure-menu pure-menu-open pure-menu-horizontal">
-                <a href="#" class="pure-menu-heading"><h1><strong>Jot</strong>Payments</h1></a>
+            <div class="pure-menu pure-menu-open pure-menu-horizontal wlogo">
+                <a href="#" class="pure-menu-heading"><h1 class="header-logo"><strong><font class="bigJ">J</font>ot</strong>Payment</h1></a>
                 <ul>
                     <li class="pure-menu-selected"><a href="#"><i class="fa fa-home"></i>Home</a></li>
                     <li><a href="#"><i class="fa fa-phone"></i>Contact</a></li>
@@ -133,6 +133,12 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="jotpayment-footer">
+        <div >
+            <p class="infos bignames"><a href="http://www.jotform.com/" title="JotForm - Form builder" alt="jotform" target="_blank">JotForm</a> | <a href="http://jotpayments.jotform.io/" title="JotPayment History" alt="jotpayment" target="_blank">JotPayments </p>
+            <p class="infos owner">© 2013 <a href="http://www.google.com/recaptcha/mailhide/d?k=01zXnyZ97-oLOl4pY5AuarnA==&amp;c=-aqY40GERMz4XMdaOID1yIcIk9_F6i3S2ktFRrlTzng=" onclick="window.open('http://www.google.com/recaptcha/mailhide/d?k\07501zXnyZ97-oLOl4pY5AuarnA\75\75\46c\75-aqY40GERMz4XMdaOID1yIcIk9_F6i3S2ktFRrlTzng\075', '', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300'); return false;" title="Reveal this e-mail address">Kenneth Palaganas</a></p>
         </div>
     </div>
 
