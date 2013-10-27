@@ -423,7 +423,7 @@ var _jp_ChartView = Backbone.View.extend({
 
         model.rangeOptions = {
             size: {
-                height: 120
+                height: 150
             },
             margin: {
                 left: 10
@@ -443,7 +443,7 @@ var _jp_ChartView = Backbone.View.extend({
 
         var html = [
             '<div id="zoomedChart" style="height: 350px"></div>',
-            '<div id="selectorChart" style="height: 80px"></div>'
+            '<div id="selectorChart"></div>'
         ].join('');
 
         window.app.bindings.chartsViewModel.charts(html);

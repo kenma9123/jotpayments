@@ -5,17 +5,17 @@
     $header = '
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="keywords" content="jotpayment, payment, history, payment history, history payment, jotform, view payment, jotform payment, jotform history payment" />
-        <meta name="description" content="View all your forms payments history in one place, easy access and ease of use by using JotForm" />
+        <meta name="description" content="You have a payment form and want to know how much money that form has made you. With this app you\'ll be able to have a better insight of your form." />
         <meta name="google-site-verification" content="CG6F2CQMNJ3nvu1pdPuN7Ww_YcG1-0cMc06ntbB12wk" />
         <meta property="og:title" content="JotPayment History" />
-        <meta property="og:description" content="View all your forms payments history in one place, easy access and ease of use by using JotForm" />
+        <meta property="og:description" content="You have a payment form and want to know how much money that form has made you. With this app you\'ll be able to have a better insight of your form." />
         <meta property="og:image" content="http://cms.interlogy.com/uploads/image_upload/image_upload/global/9260_150X150.jpg" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="" />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:url" content="" />
         <meta name="twitter:title" content="" />
-        <meta name="twitter:description" content="View all your forms payments history in one place, easy access and ease of use by using JotForm" />
+        <meta name="twitter:description" content="You have a payment form and want to know how much money that form has made you. With this app you\'ll be able to have a better insight of your form." />
         <meta name="twitter:image" content="http://cms.interlogy.com/uploads/image_upload/image_upload/global/9260_150X150.jpg" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
         <meta name="HandheldFriendly" content="true" />
