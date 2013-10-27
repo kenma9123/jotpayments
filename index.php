@@ -137,8 +137,14 @@
     </div>
     <div class="jotpayment-footer">
         <div >
-            <p class="infos bignames"><a href="http://www.jotform.com/" title="JotForm - Form builder" alt="jotform" target="_blank">JotForm</a> | <a href="http://jotpayments.jotform.io/" title="JotPayment History" alt="jotpayment" target="_blank">JotPayments </p>
-            <p class="infos owner">© 2013 <a href="http://www.google.com/recaptcha/mailhide/d?k=01zXnyZ97-oLOl4pY5AuarnA==&amp;c=-aqY40GERMz4XMdaOID1yIcIk9_F6i3S2ktFRrlTzng=" onclick="window.open('http://www.google.com/recaptcha/mailhide/d?k\07501zXnyZ97-oLOl4pY5AuarnA\75\75\46c\75-aqY40GERMz4XMdaOID1yIcIk9_F6i3S2ktFRrlTzng\075', '', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300'); return false;" title="Reveal this e-mail address">Kenneth Palaganas</a></p>
+            <p class="infos bignames">
+                <a href="http://www.jotform.com/" title="JotForm - Form builder" alt="jotform" target="_blank">JotForm</a> | 
+                <a href="http://jotpayments.jotform.io/" title="JotPayment History" alt="jotpayment" target="_blank">JotPayments</a>
+            </p>
+            <p class="infos owner">
+                © 2013 <a href="http://www.google.com/recaptcha/mailhide/d?k=01zXnyZ97-oLOl4pY5AuarnA==&amp;c=-aqY40GERMz4XMdaOID1yIcIk9_F6i3S2ktFRrlTzng=" onclick="window.open('http://www.google.com/recaptcha/mailhide/d?k\07501zXnyZ97-oLOl4pY5AuarnA\75\75\46c\75-aqY40GERMz4XMdaOID1yIcIk9_F6i3S2ktFRrlTzng\075', '', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300'); return false;" title="Reveal this e-mail address">Kenneth Palaganas</a>
+                <br/><span style="font-size: 9px;">JotForm Developer</span>
+            </p>
         </div>
     </div>
 
