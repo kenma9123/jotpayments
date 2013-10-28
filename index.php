@@ -57,15 +57,15 @@
             <div class="pure-menu pure-menu-open pure-menu-horizontal wlogo">
                 <a href="#" class="pure-menu-heading"><h1 class="header-logo"><strong><font class="bigJ">J</font>ot</strong>Payment</h1></a>
                 <ul>
-                    <li class="pure-menu-selected"><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                    <li><a href="#"><i class="fa fa-phone"></i>Contact</a></li>
+                    <li class="pure-menu-selected"><a href="#"><i class="fa fa-home"></i>&nbsp;Home</a></li>
+                    <li><a href="#"><i class="fa fa-phone"></i>&nbsp;Contact</a></li>
                 </ul>
                 <div class="account_info">
                     <div class="account-container">
                         <div class="account-div information">
-                            <div class="account-info-div name" data-bind="text: username"></div>
+                            <div class="account-info-div name"><i class="fa fa-user"></i>&nbsp;<span id="username" data-bind="text: username"></span></div>
                             <div class="account-info-div logout">
-                                <a id="logout" href="#" data-bind="click: logout">Logout</a>
+                                <a id="logout" href="#" data-bind="click: logout"><i class="fa fa-power-off"></i>&nbsp;Logout</a>
                             </div>
                         </div>
                         <div class="account-div image" data-bind="style : {'background-image':avatar()}"></div>
