@@ -7,7 +7,7 @@ Class User
     protected $_session;
 	protected $tablename = "accounts";
 
-    public static $sessionVariable = "_accounts_jotpoll_session";
+    public static $sessionVariable = "_accounts_jotpayment_session";
 
 	function __construct($username = null, $email = null, $apikey = null)
 	{
@@ -50,7 +50,7 @@ Class User
         {
             $user_id = (is_null($uid)) ? $user_data['id'] : $uid;
             $_db = new MySQL(MYSQL_CONNECTION);
-            $stmt = $_db->query("SELECT `id`,`jotform_username`, `jotform_email` FROM `accounts` WHERE `id` = :id", array('id' => $user_id))->limit(1);
+            $stmt = $_db->query("SELECT `id`,`jotform_username`, `jotform_email`, `created_at` FROM `accounts` WHERE `id` = :id", array('id' => $user_id))->limit(1);
             $user_data = $stmt->fetchAssoc();
         }
 
@@ -63,7 +63,8 @@ Class User
     {
         $values = array(
             'jotform_username' => $this->jot_username,
-            'jotform_email' => $this->jot_email
+            'jotform_email' => $this->jot_email,
+            'created_at' => $this->_db->expr('CURRENT_TIMESTAMP')
         );
 
         return $this->_db->insert($this->tablename, $values);
@@ -74,7 +75,7 @@ Class User
         if ( is_null($user) || is_null($email) ) throw new Exception("Username and email are missing");
 
         $binds = array('j_u' => $user, 'j_e' => $email);
-        $queryStatement = "SELECT `id`,`jotform_username`, `jotform_email` FROM `".$this->tablename."` WHERE `jotform_username` = :j_u AND `jotform_email` = :j_e LIMIT 1";
+        $queryStatement = "SELECT `id`,`jotform_username`, `jotform_email`, `created_at` FROM `".$this->tablename."` WHERE `jotform_username` = :j_u AND `jotform_email` = :j_e LIMIT 1";
         $stmt = $this->_db->prepare($queryStatement);
         $stmt->execute($binds);
         $userData = $stmt->fetchAssoc();

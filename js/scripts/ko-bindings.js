@@ -184,6 +184,7 @@ window.app.bindings.formSearch = {
             sort: 'created_at',
             sortType: 'DESC',
             multiSelect: false,
+            inifinite_scroll: true,
             onSelect: function(r) {
                 var selectedFormObj = r[0]
                   , data = {
@@ -257,8 +258,7 @@ window.app.bindings.account = {
     },
     logout: function()
     {
-        JF.logout();
-        window.location.href = window.base;
+        window.app.accountView.logout();
     }
 };
 

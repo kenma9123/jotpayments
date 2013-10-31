@@ -27,9 +27,8 @@ var _jp_AccountView = Backbone.View.extend({
             success: function(response)
             {
                 if ( response.success ) {
-                    self.removeJFUserData(function(){
-                        window.location.href = window.base;
-                    });
+                    JF.logout();
+                    window.location.href = window.base;
                 }
             },
             error: function(errors)
@@ -40,6 +39,32 @@ var _jp_AccountView = Backbone.View.extend({
         });
 
         return false;
+    },
+
+    handleAccount: function(user, next)
+    {
+        var self = this;
+
+        $.ajax({
+            url: 'server.php',
+            type: 'POST',
+            data: {
+                action: 'handleAccount',
+                username: user.username,
+                email: user.email,
+                key: JF.getAPIKey()
+            },
+            success: function(response)
+            {
+                console.log(response);
+
+                if ( next ) next();
+            },
+            error: function(errors)
+            {
+                console.log('Errors', errors);
+            }
+        });
     },
 
     handleJFUser: function(next)
@@ -54,9 +79,10 @@ var _jp_AccountView = Backbone.View.extend({
             //check if active 
             if ( String(user.status).toLowerCase() === 'active' ) {
                 self.user = user;
-
-                //apply account info binding
-                window.app.bindings.account.set(user.username, user.avatarUrl);
+                self.handleAccount(user, function(){
+                    //apply account info binding
+                    window.app.bindings.account.set(user.username, user.avatarUrl);
+                });
             } else {
                 alert("User is not ACTIVE anymore\nPlease contact JotForm!");
             }
