@@ -1,5 +1,7 @@
 <?php
     require_once("lib/header.php");
+    $users = User::countUsers();
+    $user_count = ( count($users) > 0 ) ? (number_format($users) . ' users trust ' . APP_NAME) : '';
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -143,7 +145,8 @@
             </p>
             <p class="infos owner">
                 © 2013 <a href="http://www.google.com/recaptcha/mailhide/d?k=01zXnyZ97-oLOl4pY5AuarnA==&amp;c=-aqY40GERMz4XMdaOID1yIcIk9_F6i3S2ktFRrlTzng=" onclick="window.open('http://www.google.com/recaptcha/mailhide/d?k\07501zXnyZ97-oLOl4pY5AuarnA\75\75\46c\75-aqY40GERMz4XMdaOID1yIcIk9_F6i3S2ktFRrlTzng\075', '', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300'); return false;" title="Reveal this e-mail address">Kenneth Palaganas</a>
-                <br/><span style="font-size: 9px;">JotForm Developer</span>
+                <br/><span style="font-size: 9px;">JotForm Developer</span><br/>
+                <span style="font-size: 9px;"><?=$user_count?></span>
             </p>
         </div>
     </div>

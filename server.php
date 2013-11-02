@@ -29,6 +29,10 @@ try
             Session::destroy();
             $httpresponse->success("Successfully logged out");
         break;
+        case 'getAllUsers':
+            $rel = Admin::getAllUsers(true);
+            echo $rel;
+        break;
         default:
             $httpresponse->error("Invalid method - " . $request['action'] . " not found.");
         break;

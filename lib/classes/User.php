@@ -70,6 +70,15 @@ Class User
         return $this->_db->insert($this->tablename, $values);
     }
 
+    public static function countUsers()
+    {
+        $_db = new MySQL(MYSQL_CONNECTION);
+        $stmt = $_db->query("SELECT id FROM `accounts`");
+        $results = $stmt->fetchAllAssoc();
+
+        return count($results);
+    }
+
     public function login($user = null, $email = null)
     {
         if ( is_null($user) || is_null($email) ) throw new Exception("Username and email are missing");
