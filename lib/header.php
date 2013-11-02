@@ -29,6 +29,7 @@
         <link rel="stylesheet" href="' . HTTP_URL . 'css/jotpayments-main.css" type="text/css" media="screen, projection" />
         <link rel="stylesheet" href="' . HTTP_URL . 'css/font/font-awesome.css" type="text/css" media="screen, projection" />
         <link rel="stylesheet" href="' . HTTP_URL . 'js/lib/ladda/ladda-themeless.css" type="text/css" media="screen, projection" />
+        <link rel="stylesheet" href="' . HTTP_URL . 'js/lib/scrollbar/scrollbar.css" type="text/css" media="screen, projection" />
     ';
 
     $jotformFiles = 
@@ -49,6 +50,7 @@
     <script type="text/javascript" src="' . HTTP_URL . 'js/lib/hogan.js?v=2.0.0"></script>
     <script type="text/javascript" src="' . HTTP_URL . 'js/lib/typeahead.js?v=0.9.3"></script>
     <script type="text/javascript" src="' . HTTP_URL . 'js/lib/ladda/jquery.ladda.js?v=0.6.0"></script>
+    <script type="text/javascript" src="' . HTTP_URL . 'js/lib/scrollbar/scrollbar.js?v=0.6.0"></script>
     <script type="text/javascript" src="' . HTTP_URL . 'js/lib/charts/dx.chartjs.js"></script>
     <script type="text/javascript" src="' . HTTP_URL . 'js/lib/charts/globalize.js"></script>
     '. $jotformFiles .'

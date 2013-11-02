@@ -30,7 +30,7 @@
                             <div class="banner-text">Want to show some cool poll stuff after a submission? Tired of seeing normal and not so good polls? Now its your time to shine! Show your users a good poll result using your own style. Customize your own polls and let the world of poll change yours. Please look at the **How to** section and how to properly use the application. </div>
                         </div>
                         <div class="visual">
-                            <p><img src="css/images/jotpoll.png" alt=""></p>
+                            <!-- <p><img src="css/images/jotpoll.png" alt=""></p> -->
                         </div>
                         <div class="integrate_btn">
                             <button class="btn btn-large btn-block btn-success" id="integrate_now-btn">Integrate Now!</button>  </div>
@@ -113,15 +113,17 @@
                         <div class="info-chart charts product_list">
                             <div id="product_list" data-bind="visible: hasValue() == true"> 
                                 <h1 class="heading" data-bind="html: heading"></h1>
-                                <ul data-bind="foreach: products" class="segoeUI-font products">
-                                    <li class="list">
-                                        <label class="labels name" data-bind="html: name"></label>
-                                        <label class="labels price" data-bind="html: price"></label>
-                                        <label class="labels soldCount" data-bind="html: soldCount, css: { 'topline': ($parent.products().length - 1) == $index()}"></label>
-                                        <label class="labels soldTotal" data-bind="html: soldTotal, css: { 'topline': ($parent.products().length - 1) == $index()}"></label>
-                                        <label class="clearer"></label>
-                                    </li>
-                                </ul>
+                                <div style="position:relative;" id="product-list-cont">
+                                    <ul data-bind="foreach: products" class="segoeUI-font products">
+                                        <li class="list">
+                                            <label class="labels name" data-bind="html: name"></label>
+                                            <label class="labels price" data-bind="html: price"></label>
+                                            <label class="labels soldCount" data-bind="html: soldCount, css: { 'topline': ($parent.products().length - 1) == $index()}"></label>
+                                            <label class="labels soldTotal" data-bind="html: soldTotal, css: { 'topline': ($parent.products().length - 1) == $index()}"></label>
+                                            <label class="clearer"></label>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                         <div class="clearer"></div>

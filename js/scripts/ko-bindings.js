@@ -103,6 +103,9 @@ var productListViewModel = function()
                 soldTotal:totalSoldPrice
             })
         );
+
+        //init scrollbar
+        $("#product-list-cont").perfectScrollbar();
     };
 
     this.setProducts = function(model)
